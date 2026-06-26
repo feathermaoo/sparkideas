@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>閃念點子冒險</title>
+    <title>閃念點子冒險實驗錄</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -62,7 +62,7 @@
         }
 
         .header h1 {
-            color: #b56c4d; /* 溫暖的皮革紅棕色 */
+            color: #b56c4d;
             font-size: 24px;
             font-weight: bold;
             display: flex;
@@ -82,17 +82,42 @@
             margin-top: 2px;
         }
 
-        /* 雲端同步狀態條（強制隱形魔法） */
-        .sync-banner {
-            display: none !important;
-        }
-
         @keyframes bounce {
             0%, 100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-4px) scale(1.05); }
         }
 
-        /* 經典拼布手作卡片滾邊效果 */
+        /* 👑 Google 登入狀態橫條 */
+        .g-sync-banner {
+            background-color: #f8f4ee;
+            border: 1px dashed var(--stitch-color);
+            border-radius: 14px;
+            padding: 8px 14px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #b56c4d;
+            font-weight: bold;
+        }
+
+        .g-btn-style {
+            background-color: #ffffff;
+            border: 1px solid #cca483;
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 10px;
+            color: #695749;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+        .g-btn-style:hover { background-color: #fcf8f2; }
+
+        /* 經典拼布手作卡片（縫線滾邊效果） */
         .stitch-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
@@ -110,14 +135,13 @@
             margin-bottom: 12px;
         }
 
-        /* 等級布標 */
         .level-badge {
             background-color: var(--accent-yellow);
             border: 2px dashed #ffffff;
             color: #b56c4d;
             width: 54px;
             height: 54px;
-            border-radius: 50%; /* 圓形鈕扣感 */
+            border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -231,7 +255,7 @@
             background-color: #ffffff;
         }
 
-        /* 正方形加號按鈕 */
+        /* 完美的正方形不卡邊按鈕 */
         .add-btn {
             background-color: #e88d67;
             border: 2px solid #ffffff;
@@ -249,7 +273,6 @@
             transition: transform 0.1s;
             flex-shrink: 0;
         }
-
         .add-btn:active { transform: scale(0.95); }
 
         .tag-selector, .frequency-selector, .filter-row, .chart-filter-row {
@@ -272,7 +295,7 @@
             font-weight: bold;
         }
 
-        /* 手作布貼風格按鈕 */
+        /* 布貼標籤樣式 */
         .tag-btn, .freq-btn, .filter-btn, .range-btn, .chart-tag-btn {
             background-color: #faf6f0;
             border: 1px dashed var(--stitch-color);
@@ -288,49 +311,16 @@
             transition: all 0.2s;
         }
 
-        .tag-btn.active {
-            background-color: var(--accent-pink);
-            border-style: solid;
-            border-color: #ffffff;
-            color: white;
-        }
-
-        .freq-btn.active {
-            background-color: var(--accent-green);
-            border-style: solid;
-            border-color: #ffffff;
-            color: white;
-        }
+        .tag-btn.active { background-color: var(--accent-pink); border-style: solid; border-color: #ffffff; color: white; }
+        .freq-btn.active { background-color: var(--accent-green); border-style: solid; border-color: #ffffff; color: white; }
+        .filter-btn.active { background-color: var(--accent-blue); border-style: solid; border-color: #ffffff; color: white; }
+        .chart-tag-btn.active { background-color: var(--accent-purple); border-style: solid; border-color: #ffffff; color: white; }
 
         .add-custom-tag-btn {
             background-color: transparent;
             border: 1px dashed #b56c4d;
             color: #b56c4d;
             padding: 5px 10px;
-        }
-
-        .filter-row {
-            flex-shrink: 0;
-        }
-        .filter-btn {
-            background-color: var(--card-bg);
-            border: 1px dashed #ebdccb;
-            box-shadow: 0 4px 8px rgba(166, 146, 130, 0.06);
-        }
-
-        .filter-btn.active {
-            background-color: var(--accent-blue);
-            border-style: solid;
-            border-color: #ffffff;
-            color: white;
-        }
-
-        /* 圖表專用分類布貼 */
-        .chart-tag-btn.active {
-            background-color: var(--accent-purple);
-            border-style: solid;
-            border-color: #ffffff;
-            color: white;
         }
 
         /* 任務列表 */
@@ -343,13 +333,8 @@
             padding-right: 2px;
         }
 
-        .task-list::-webkit-scrollbar {
-            width: 4px;
-        }
-        .task-list::-webkit-scrollbar-thumb {
-            background-color: rgba(204, 164, 131, 0.3);
-            border-radius: 4px;
-        }
+        .task-list::-webkit-scrollbar { width: 4px; }
+        .task-list::-webkit-scrollbar-thumb { background-color: rgba(204, 164, 131, 0.3); border-radius: 4px; }
 
         .empty-state {
             text-align: center;
@@ -364,10 +349,7 @@
             border: 2px dashed #ebdccb;
         }
 
-        .empty-icon {
-            font-size: 40px;
-            color: var(--accent-pink);
-        }
+        .empty-icon { font-size: 40px; color: var(--accent-pink); }
 
         .task-item {
             background-color: var(--card-bg);
@@ -389,13 +371,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .task-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-grow: 1;
-            cursor: pointer;
-        }
+        .task-left { display: flex; align-items: center; gap: 12px; flex-grow: 1; cursor: pointer; }
 
         .custom-checkbox {
             width: 22px;
@@ -407,75 +383,26 @@
             align-items: center;
             color: transparent;
             font-size: 11px;
-            transition: all 0.2s;
             background-color: #ffffff;
             flex-shrink: 0;
         }
 
-        .task-item.completed .custom-checkbox {
-            background-color: var(--accent-green);
-            border-color: var(--accent-green);
-            color: white;
-        }
+        .task-item.completed .custom-checkbox { background-color: var(--accent-green); border-color: var(--accent-green); color: white; }
+        
+        .task-content { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
+        
+        .task-text { font-size: 14px; font-weight: 500; word-break: break-all; transition: color 0.2s; }
+        .task-text:active { color: #b56c4d; }
+        .task-item.completed .task-text { text-decoration: line-through; color: var(--text-muted); }
 
-        .task-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            flex-grow: 1;
-        }
+        .task-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+        .task-tag { font-size: 10px; color: #b56c4d; background-color: #f7ede2; padding: 2px 6px; border-radius: 4px; }
+        .task-freq { font-size: 10px; color: #e88d67; background-color: #fff3ed; padding: 2px 6px; border-radius: 4px; }
 
-        .task-text {
-            font-size: 14px;
-            font-weight: 500;
-            word-break: break-all;
-            transition: color 0.2s;
-        }
-        .task-text:active {
-            color: #b56c4d;
-        }
-
-        .task-item.completed .task-text {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-
-        .task-badges {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .task-tag {
-            font-size: 10px;
-            color: #b56c4d;
-            background-color: #f7ede2;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .task-freq {
-            font-size: 10px;
-            color: #e88d67;
-            background-color: #fff3ed;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .delete-btn {
-            background: none;
-            border: none;
-            color: #ebdccb;
-            cursor: pointer;
-            font-size: 14px;
-            padding: 6px;
-            transition: color 0.2s;
-            flex-shrink: 0;
-        }
-
+        .delete-btn { background: none; border: none; color: #ebdccb; cursor: pointer; font-size: 14px; padding: 6px; flex-shrink: 0; }
         .delete-btn:hover { color: var(--accent-pink); }
 
-        /* 歷程檢視抽屜 */
+        /* 圖表抽屜 */
         .chart-toggle-header {
             background-color: #ebdccb;
             color: #b56c4d;
@@ -488,7 +415,6 @@
             justify-content: space-between;
             align-items: center;
             border: 1px dashed var(--stitch-color);
-            transition: all 0.2s;
             flex-shrink: 0;
             margin-top: 2px;
         }
@@ -502,72 +428,27 @@
             border: 2px dashed var(--stitch-color);
             flex-direction: column;
             gap: 10px;
-            animation: slideDown 0.3s ease-out;
             flex-shrink: 0;
         }
 
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .chart-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .range-selector-row {
-            display: flex;
-            gap: 6px;
-        }
-
-        .range-btn {
-            padding: 3px 10px;
-            font-size: 11px;
-            border-radius: 12px;
-        }
-
-        .range-btn.active {
-            background-color: var(--accent-blue);
-            border-style: solid;
-            border-color: #ffffff;
-            color: white;
-        }
-
-        /* 備份按鈕 */
-        .backup-section {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding-top: 6px;
-            padding-bottom: 12px;
-            flex-shrink: 0;
-        }
-
-        .backup-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .backup-btn:hover { color: #b56c4d; }
+        .chart-controls { display: flex; justify-content: space-between; align-items: center; }
+        .range-selector-row { display: flex; gap: 6px; }
+        .range-btn { padding: 3px 10px; font-size: 11px; border-radius: 12px; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-teddy-bear"></i> 閃念點子冒險實錄</h1>
+            <h1><i class="fas fa-teddy-bear"></i> 閃念點子冒險實驗錄</h1>
             <p>縫製每一個閃念，織成最棒的自己 🧶</p>
         </div>
 
-        <div class="sync-banner" style="display: none !important;">
-            <span class="sync-status" id="syncStatus">讀取中...</span>
+        <div class="g-sync-banner">
+            <span id="syncIconText"><i class="fas fa-key"></i> 進度儲存：在地記憶體</span>
+            <button class="g-btn-style" id="gLoginBtn" onclick="handleAuthClick()">
+                <i class="fab fa-google"></i> <span id="gBtnText">連動 Google 帳號</span>
+            </button>
         </div>
 
         <div class="stitch-card">
@@ -603,7 +484,7 @@
 
         <div class="input-card">
             <div class="input-row">
-                <input type="text" id="taskInput" placeholder="天外飛來一個念頭...">
+                <input type="text" id="taskInput" placeholder="捕捉到一個手寫念頭...">
                 <button class="add-btn" id="addTaskBtn"><i class="fas fa-plus"></i></button>
             </div>
             
@@ -620,7 +501,6 @@
         </div>
 
         <div class="filter-row" id="filterRow"></div>
-
         <div class="task-list" id="taskList"></div>
 
         <div class="chart-toggle-header" id="chartToggleBtn">
@@ -639,38 +519,30 @@
             <div class="chart-filter-row" id="chartFilterRow"></div>
             <canvas id="historyChart" style="max-height: 120px; width: 100%;"></canvas>
         </div>
-
-        <div class="backup-section">
-            <button class="backup-btn" onclick="exportData()"><i class="fas fa-save"></i> 複製備份碼</button>
-            <button class="backup-btn" onclick="importData()"><i class="fas fa-file-import"></i> 還原進度</button>
-        </div>
     </div>
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js" async defer></script>
+
     <script>
-        const CLOUD_STORAGE_KEY = "feather_quest_log_v1_sticky";
-        const CLOUD_API_URL = `https://api.jsonbin.io/v3/b`;
-        const CLOUD_SECRET = "$2a$10$WpP69bV0cEn.iH6f6N7P6eS9p3SWhC3i97p6wPqQpU.vWfUqO3bI2"; 
+        const CLIENT_ID = '578239870910-1chkp51qfrjqie8kosuna3vkhvo2ulls.apps.googleusercontent.com';
+        const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
 
         let state = {
-            level: 1,
-            xp: 0,
-            streak: 0,
-            completedCount: 0,
-            tasks: [],
-            customTags: ["待辦任務", "購物清單", "想讀的書"],
-            lastActiveDate: "",
-            historyData: {}, // 舊版格式保持相容
-            historyDataV2: {}, // 👑 新格式：{"2026/6/26": {"待辦任務": 2, "保險": 1}}
-            binId: "" 
+            level: 1, xp: 0, streak: 0, completedCount: 0,
+            tasks: [], customTags: ["待辦任務", "購物清單", "想讀的書"],
+            lastActiveDate: "", historyData: {}, historyDataV2: {}
         };
 
         const titles = ["迷途夢想家", "見習冒險者", "精靈使者", "閃念掌控者", "行動傳奇"];
         let currentSelectedTag = "待辦任務";
         let currentSelectedFreq = "單次";
         let currentFilter = "全部";
-        let currentChartFilter = "全部"; // 👑 新增：圖表當前篩選分類
+        let currentChartFilter = "全部";
         let currentRange = 7; 
         let myChart = null;
+        let tokenClient = null;
+        let googleAccessToken = null;
 
         const tagIcons = {
             "待辦任務": "fa-clipboard-list",
@@ -681,113 +553,128 @@
             "客戶": "fa-user-check"
         };
 
-        document.addEventListener("DOMContentLoaded", async () => {
+        document.addEventListener("DOMContentLoaded", () => {
             loadFromStorage();
             checkStreak();
             checkAndResetRepeatingTasks();
             initEventListeners();
             renderSelectors();
-            renderChartSelectors(); // 👑 初始化生成圖表分類按鈕
+            renderChartSelectors();
             render();
-            await syncWithCloud();
+            setTimeout(initGoogleIdentity, 1000); // 延遲一秒確保腳本加載完畢
         });
+
+        // 👑 Google Identity 模組初始化
+        function initGoogleIdentity() {
+            try {
+                if (typeof google !== 'undefined') {
+                    tokenClient = google.accounts.oauth2.initTokenClient({
+                        client_id: CLIENT_ID,
+                        scope: SCOPES,
+                        callback: async (resp) => {
+                            if (resp.error) return;
+                            googleAccessToken = resp.access_token;
+                            document.getElementById("gBtnText").innerText = "已連動雲端";
+                            document.getElementById("syncIconText").innerHTML = `<i class="fas fa-cloud" style="color:#a8d3bb;"></i> 雲端模式：Google Drive 同步中`;
+                            await loadFromGoogleDrive();
+                        }
+                    });
+                }
+                if (typeof gapi !== 'undefined') {
+                    gapi.load('client', () => {});
+                }
+            } catch (e) { console.error("Google 初始化失敗", e); }
+        }
+
+        function handleAuthClick() {
+            if (tokenClient) tokenClient.requestAccessToken({ prompt: 'consent' });
+        }
+
+        // 👑 從個人的 Google Drive 讀取隱藏備份
+        async function loadFromGoogleDrive() {
+            if (!googleAccessToken) return;
+            try {
+                let res = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder', {
+                    headers: { 'Authorization': `Bearer ${googleAccessToken}` }
+                });
+                let data = await res.json();
+                let file = data.files.find(f => f.name === 'spark_ideas_backup.json');
+                
+                if (file) {
+                    let fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`, {
+                        headers: { 'Authorization': `Bearer ${googleAccessToken}` }
+                    });
+                    let cloudState = await fileRes.json();
+                    if (cloudState && (cloudState.completedCount >= state.completedCount || state.tasks.length === 0)) {
+                        state = { ...state, ...cloudState };
+                        if (!state.historyDataV2) state.historyDataV2 = {};
+                        localStorage.setItem("quest_log_state", JSON.stringify(state));
+                        renderSelectors();
+                        renderChartSelectors();
+                        render();
+                        if (myChart) updateChart();
+                    }
+                }
+            } catch (e) { console.error("雲端讀取錯誤", e); }
+        }
+
+        // 👑 將最新資料即時覆蓋到個人的 Google Drive
+        async function saveToGoogleDrive() {
+            if (!googleAccessToken) return;
+            try {
+                let res = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder', {
+                    headers: { 'Authorization': `Bearer ${googleAccessToken}` }
+                });
+                let data = await res.json();
+                let file = data.files.find(f => f.name === 'spark_ideas_backup.json');
+                
+                let metadata = { name: 'spark_ideas_backup.json', parents: ['appDataFolder'] };
+                let boundary = 'foo_bar_baz';
+                let delimiter = `\r\n--${boundary}\r\n`;
+                let closeDelim = `\r\n--${boundary}--`;
+                
+                let multipartRequestBody =
+                    delimiter +
+                    'Content-Type: application/json\r\n\r\n' +
+                    JSON.stringify(metadata) +
+                    delimiter +
+                    'Content-Type: application/json\r\n\r\n' +
+                    JSON.stringify(state) +
+                    closeDelim;
+
+                let url = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
+                let method = 'POST';
+
+                if (file) {
+                    url = `https://www.googleapis.com/upload/drive/v3/files/${file.id}?uploadType=multipart`;
+                    method = 'PATCH';
+                }
+
+                await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Authorization': `Bearer ${googleAccessToken}`,
+                        'Content-Type': `multipart/related; boundary=${boundary}`
+                    },
+                    body: multipartRequestBody
+                });
+            } catch (e) { console.error("雲端儲存錯誤", e); }
+        }
 
         function loadFromStorage() {
             try {
                 const savedState = localStorage.getItem("quest_log_state");
                 if (savedState) {
-                    const parsed = JSON.parse(savedState);
-                    state = { ...state, ...parsed };
+                    state = { ...state, ...JSON.parse(savedState) };
                     if (!state.historyDataV2) state.historyDataV2 = {};
                 }
-            } catch (e) {
-                console.error("載入本地失敗", e);
-            }
+            } catch (e) { console.error(e); }
         }
 
+        // 👑 有變動時同時儲存本地與 Google 雲端
         function saveToStorage() {
             localStorage.setItem("quest_log_state", JSON.stringify(state));
-            uploadToCloud(); 
-        }
-
-        async function syncWithCloud() {
-            let savedBinId = state.binId || localStorage.getItem("quest_log_cloud_bin_id");
-
-            if (!savedBinId) {
-                await createNewCloudBin();
-                return;
-            }
-
-            state.binId = savedBinId;
-            localStorage.setItem("quest_log_cloud_bin_id", savedBinId);
-
-            try {
-                const res = await fetch(`${CLOUD_API_URL}/${savedBinId}/latest`, {
-                    headers: { "X-Master-Key": CLOUD_SECRET }
-                });
-                if (res.ok) {
-                    const cloudData = await res.json();
-                    const cloudState = cloudData.record;
-                    
-                    if (cloudState && cloudState.tasks && cloudState.tasks.length === state.tasks.length && cloudState.completedCount === state.completedCount) {
-                        state = { ...state, ...cloudState, binId: savedBinId };
-                        localStorage.setItem("quest_log_state", JSON.stringify(state));
-                        renderSelectors();
-                        renderChartSelectors();
-                        render();
-                        if (myChart) updateChart();
-                    } else if (cloudState && cloudState.tasks && cloudState.tasks.length > state.tasks.length) {
-                        state = { ...state, ...cloudState, binId: savedBinId };
-                        localStorage.setItem("quest_log_state", JSON.stringify(state));
-                        renderSelectors();
-                        renderChartSelectors();
-                        render();
-                        if (myChart) updateChart();
-                    } else {
-                        await uploadToCloud();
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        async function createNewCloudBin() {
-            try {
-                const res = await fetch(CLOUD_API_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Master-Key": CLOUD_SECRET,
-                        "X-Bin-Private": "false"
-                    },
-                    body: JSON.stringify(state)
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    state.binId = data.metadata.id;
-                    localStorage.setItem("quest_log_cloud_bin_id", state.binId);
-                    localStorage.setItem("quest_log_state", JSON.stringify(state));
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        }
-
-        async function uploadToCloud() {
-            if (!state.binId) return;
-            try {
-                await fetch(`${CLOUD_API_URL}/${state.binId}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Master-Key": CLOUD_SECRET
-                    },
-                    body: JSON.stringify(state)
-                });
-            } catch (e) {
-                console.error("雲端上傳連線失敗", e);
-            }
+            saveToGoogleDrive(); 
         }
 
         function renderSelectors() {
@@ -807,11 +694,9 @@
                 const iconClass = tagIcons[tag] || "fa-tag";
                 filterRow.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${tag}"><i class="fas ${iconClass}"></i> ${tag} <span id="count-${tag}">0</span></button>`;
             });
-
             rebindSelectorEvents();
         }
 
-        // 👑 新增：動態生成圖表內部的分類布貼列
         function renderChartSelectors() {
             const chartFilterRow = document.getElementById("chartFilterRow");
             chartFilterRow.innerHTML = `<button class="chart-tag-btn ${currentChartFilter === '全部' ? 'active' : ''}" data-cfilter="全部">✨ 全部</button>`;
@@ -821,13 +706,12 @@
                 chartFilterRow.innerHTML += `<button class="chart-tag-btn ${isActive}" data-cfilter="${tag}"><i class="fas ${iconClass}"></i> ${tag}</button>`;
             });
 
-            // 綁定圖表分類按鈕點擊事件
             document.querySelectorAll("#chartFilterRow .chart-tag-btn").forEach(btn => {
                 btn.addEventListener("click", (e) => {
                     document.querySelectorAll("#chartFilterRow .chart-tag-btn").forEach(b => b.classList.remove("active"));
                     e.currentTarget.classList.add("active");
                     currentChartFilter = e.currentTarget.getAttribute("data-cfilter");
-                    updateChart(); // 即時重繪圖表
+                    updateChart();
                 });
             });
         }
@@ -850,7 +734,7 @@
                         currentSelectedTag = clean;
                         saveToStorage();
                         renderSelectors();
-                        renderChartSelectors(); // 同步更新圖表分類
+                        renderChartSelectors();
                         render();
                     }
                 }
@@ -872,13 +756,10 @@
                 const lastDate = new Date(state.lastActiveDate);
                 const todayDate = new Date(today);
                 const diffDays = Math.ceil(Math.abs(todayDate - lastDate) / (1000 * 60 * 60 * 24));
-                if (diffDays === 1) {
-                    state.streak += 1;
-                } else if (diffDays > 1) {
-                    state.streak = 1; 
-                }
+                if (diffDays === 1) state.streak += 1;
+                else if (diffDays > 1) state.streak = 1;
             } else if (!state.lastActiveDate) {
-                state.streak = 1; 
+                state.streak = 1;
             }
             state.lastActiveDate = today;
         }
@@ -904,20 +785,8 @@
 
         function gainXP(amount) {
             state.xp += amount;
-            
-            if (state.xp >= 100) {
-                state.xp -= 100;
-                state.level += 1;
-                alert(`🔮 成長大升級！恭喜你達到了 Lv.${state.level}！`);
-            } 
-            else if (state.xp < 0) {
-                if (state.level > 1) {
-                    state.level -= 1;
-                    state.xp = 100 + state.xp; 
-                } else {
-                    state.xp = 0; 
-                }
-            }
+            if (state.xp >= 100) { state.xp -= 100; state.level += 1; alert(`🔮 成長大升級！恭喜你達到了 Lv.${state.level}！`); } 
+            else if (state.xp < 0) { if (state.level > 1) { state.level -= 1; state.xp = 100 + state.xp; } else { state.xp = 0; } }
             saveToStorage(); 
             render();
         }
@@ -932,29 +801,18 @@
             });
 
             document.getElementById("addTaskBtn").addEventListener("click", addTask);
-            document.getElementById("taskInput").addEventListener("keypress", (e) => {
-                if (e.key === "Enter") addTask();
-            });
+            document.getElementById("taskInput").addEventListener("keypress", (e) => { if (e.key === "Enter") addTask(); });
 
             const toggleHeader = document.getElementById("chartToggleBtn");
             const wrapper = document.getElementById("chartWrapper");
             const arrow = document.getElementById("arrowIcon");
 
             toggleHeader.addEventListener("click", () => {
-                if (wrapper.style.display === "flex") {
-                    wrapper.style.display = "none";
-                    arrow.className = "fas fa-chevron-down";
-                } else {
-                    wrapper.style.display = "flex";
-                    arrow.className = "fas fa-chevron-up";
-                    if (!myChart) {
-                        initChart(); 
-                    } else {
-                        updateChart(); 
-                    }
-                    setTimeout(() => {
-                        toggleHeader.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }, 150);
+                if (wrapper.style.display === "flex") { wrapper.style.display = "none"; arrow.className = "fas fa-chevron-down"; } 
+                else {
+                    wrapper.style.display = "flex"; arrow.className = "fas fa-chevron-up";
+                    if (!myChart) initChart(); else updateChart();
+                    setTimeout(() => { toggleHeader.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 150);
                 }
             });
 
@@ -973,39 +831,28 @@
             const text = input.value.trim();
             if (!text) return;
 
-            state.tasks.push({
-                id: Date.now(),
-                text: text,
-                tag: currentSelectedTag,
-                freq: currentSelectedFreq,
-                completed: false
-            });
+            state.tasks.push({ id: Date.now(), text: text, tag: currentSelectedTag, freq: currentSelectedFreq, completed: false });
             input.value = "";
-            checkStreak(); 
+            checkStreak();
             gainXP(2); 
         }
 
-        // 👑 升級天數計算：精準到按分類紀錄完成次數
         function toggleTask(id) {
             const task = state.tasks.find(t => t.id === id);
             if (task) {
                 task.completed = !task.completed;
                 const todayStr = new Date().toLocaleDateString();
-                
                 if (!state.historyDataV2[todayStr]) state.historyDataV2[todayStr] = {};
                 
                 if (task.completed) {
                     state.completedCount += 1;
                     checkStreak();
                     gainXP(10); 
-                    
-                    // 紀錄總數與分類數
                     state.historyData[todayStr] = (state.historyData[todayStr] || 0) + 1;
                     state.historyDataV2[todayStr][task.tag] = (state.historyDataV2[todayStr][task.tag] || 0) + 1;
                 } else {
                     state.completedCount = Math.max(0, state.completedCount - 1);
                     gainXP(-10); 
-                    
                     if (state.historyData[todayStr]) state.historyData[todayStr] = Math.max(0, state.historyData[todayStr] - 1);
                     if (state.historyDataV2[todayStr] && state.historyDataV2[todayStr][task.tag]) {
                         state.historyDataV2[todayStr][task.tag] = Math.max(0, state.historyData[todayStr][task.tag] - 1);
@@ -1020,13 +867,8 @@
         function editTask(id) {
             const task = state.tasks.find(t => t.id === id);
             if (!task) return;
-            
             const newText = prompt("✏️ 修改你的手寫念頭：", task.text);
-            if (newText && newText.trim() !== "") {
-                task.text = newText.trim();
-                saveToStorage(); 
-                render();
-            }
+            if (newText && newText.trim() !== "") { task.text = newText.trim(); saveToStorage(); render(); }
         }
 
         function deleteTask(id) {
@@ -1036,15 +878,12 @@
             if (taskToDelete.completed) {
                 gainXP(-12);
                 const todayStr = new Date().toLocaleDateString();
-                
                 if (state.historyData[todayStr]) state.historyData[todayStr] = Math.max(0, state.historyData[todayStr] - 1);
                 if (state.historyDataV2[todayStr] && state.historyDataV2[todayStr][taskToDelete.tag]) {
                     state.historyDataV2[todayStr][taskToDelete.tag] = Math.max(0, state.historyDataV2[todayStr][taskToDelete.tag] - 1);
                 }
                 state.completedCount = Math.max(0, state.completedCount - 1);
-            } else {
-                gainXP(-2);
-            }
+            } else { gainXP(-2); }
 
             state.tasks = state.tasks.filter(t => t.id !== id);
             saveToStorage(); 
@@ -1052,59 +891,34 @@
             if (myChart) updateChart();
         }
 
-        // 👑 核心升級：依據所選的分類過濾出歷史數據
         function getChartValue(dateStr, tagFilter) {
-            if (tagFilter === "全部") {
-                return state.historyData[dateStr] || 0;
-            }
-            if (state.historyDataV2[dateStr] && state.historyDataV2[dateStr][tagFilter]) {
-                return state.historyDataV2[dateStr][tagFilter];
-            }
-            return 0;
+            if (tagFilter === "全部") return state.historyData[dateStr] || 0;
+            return (state.historyDataV2[dateStr] && state.historyDataV2[dateStr][tagFilter]) ? state.historyDataV2[dateStr][tagFilter] : 0;
         }
 
         function initChart() {
             const ctx = document.getElementById('historyChart').getContext('2d');
-            const labels = [];
-            const chartData = [];
-            
+            const labels = []; const chartData = [];
             for (let i = currentRange - 1; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const dateStr = d.toLocaleDateString();
-                labels.push(`${d.getMonth()+1}/${d.getDate()}`);
-                chartData.push(getChartValue(dateStr, currentChartFilter));
+                const d = new Date(); d.setDate(d.getDate() - i); const dateStr = d.toLocaleDateString();
+                labels.push(`${d.getMonth()+1}/${d.getDate()}`); chartData.push(getChartValue(dateStr, currentChartFilter));
             }
-
             myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: '縫製點子數',
-                        data: chartData,
-                        borderColor: '#f7a3a1',
-                        backgroundColor: 'rgba(247, 163, 161, 0.1)',
-                        borderWidth: 3,
-                        tension: 0.3,
-                        pointBackgroundColor: '#b56c4d',
-                        pointRadius: currentRange === 30 ? 1 : 3
+                        label: '縫製點子數', data: chartData, borderColor: '#f7a3a1',
+                        backgroundColor: 'rgba(247, 163, 161, 0.1)', borderWidth: 3, tension: 0.3,
+                        pointBackgroundColor: '#b56c4d', pointRadius: currentRange === 30 ? 1 : 3
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { stepSize: 1, color: '#a69282', font: { size: 10 } },
-                            grid: { color: 'rgba(204, 164, 131, 0.08)' }
-                        },
-                        x: {
-                            ticks: { color: '#a69282', maxRotation: 45, font: { size: 10 } },
-                            grid: { display: false }
-                        }
+                        y: { beginAtZero: true, ticks: { stepSize: 1, color: '#a69282', font: { size: 10 } }, grid: { color: 'rgba(204, 164, 131, 0.08)' } },
+                        x: { ticks: { color: '#a69282', font: { size: 10 } }, grid: { display: false } }
                     }
                 }
             });
@@ -1112,73 +926,29 @@
 
         function updateChart() {
             if (!myChart) return;
-            const labels = [];
-            const chartData = [];
-            
+            const labels = []; const chartData = [];
             for (let i = currentRange - 1; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const dateStr = d.toLocaleDateString();
-                labels.push(`${d.getMonth()+1}/${d.getDate()}`);
-                chartData.push(getChartValue(dateStr, currentChartFilter));
+                const d = new Date(); d.setDate(d.getDate() - i); const dateStr = d.toLocaleDateString();
+                labels.push(`${d.getMonth()+1}/${d.getDate()}`); chartData.push(getChartValue(dateStr, currentChartFilter));
             }
-            
-            myChart.data.labels = labels;
-            myChart.data.datasets[0].data = chartData;
+            myChart.data.labels = labels; myChart.data.datasets[0].data = chartData;
             myChart.data.datasets[0].pointRadius = currentRange === 30 ? 1 : 3;
             myChart.update();
         }
 
-        function exportData() {
-            const code = btoa(encodeURIComponent(JSON.stringify(state)));
-            navigator.clipboard.writeText(code).then(() => {
-                alert("🔮 備份成功！精靈代碼已複製。如果跨手機/跨瀏覽器，可以用還原進度來搬家喔！");
-            });
-        }
-
-        function importData() {
-            const code = prompt("請貼上之前備份的精靈代碼：");
-            if (code) {
-                try {
-                    const decoded = JSON.parse(decodeURIComponent(atob(code.trim())));
-                    if (decoded.level && decoded.tasks) {
-                        state = decoded;
-                        if (!state.historyDataV2) state.historyDataV2 = {};
-                        saveToStorage();
-                        renderSelectors();
-                        renderChartSelectors();
-                        render();
-                        updateChart();
-                        alert("✨ 魔法還原成功！所有閃念精靈與等級都回來了！");
-                    } else {
-                        alert("代碼格式不正確喔！");
-                    }
-                } catch(e) {
-                    alert("還原失敗，請確保代碼完整。");
-                }
-            }
-        }
-
         function updateCounters() {
-            const counts = { "全部": state.tasks.length };
-            state.customTags.forEach(tag => counts[tag] = 0);
+            const counts = { "全部": state.tasks.length }; state.customTags.forEach(tag => counts[tag] = 0);
             state.tasks.forEach(t => { if (counts[t.tag] !== undefined) counts[t.tag]++; });
-            Object.keys(counts).forEach(key => {
-                const el = document.getElementById(`count-${key}`);
-                if (el) el.innerText = counts[key];
-            });
+            Object.keys(counts).forEach(key => { const el = document.getElementById(`count-${key}`); if (el) el.innerText = counts[key]; });
         }
 
         function render() {
             let lvlIcon = "🛡️"; 
-            if (state.level > 3 && state.level <= 5) lvlIcon = "🪃";  
-            if (state.level > 5 && state.level <= 7) lvlIcon = "🗡️"; 
-            if (state.level > 7 && state.level <= 9) lvlIcon = "⚔️"; 
-            if (state.level > 9 && state.level <= 10) lvlIcon = "🪄"; 
+            if (state.level > 3 && state.level <= 5) lvlIcon = "🪃"; if (state.level > 5 && state.level <= 7) lvlIcon = "🗡️"; 
+            if (state.level > 7 && state.level <= 9) lvlIcon = "⚔️"; if (state.level > 9 && state.level <= 10) lvlIcon = "🪄"; 
             if (state.level > 10) lvlIcon = "👑"; 
 
             document.getElementById("levelDisplay").innerHTML = `${state.level}<span style="font-size:11px; font-weight:normal; margin-top:2px;">${lvlIcon}</span>`;
-            
             const titleIndex = Math.min(Math.floor((state.level - 1) / 3), titles.length - 1);
             document.getElementById("titleDisplay").innerText = titles[titleIndex];
             document.getElementById("xpText").innerText = `${state.xp} / 100 XP`;
@@ -1187,26 +957,16 @@
             document.getElementById("completedCountDisplay").innerText = state.completedCount;
 
             updateCounters();
-
-            const listContainer = document.getElementById("taskList");
-            const currentScroll = listContainer.scrollTop; 
-            listContainer.innerHTML = "";
-
+            const listContainer = document.getElementById("taskList"); const currentScroll = listContainer.scrollTop; listContainer.innerHTML = "";
             const filteredTasks = state.tasks.filter(t => currentFilter === "全部" || t.tag === currentFilter);
 
             if (filteredTasks.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">🧸</div>
-                        <p>布偶熊在空籃子裡等你。<br>新增一個閃念，織出你的第一份成就吧！</p>
-                    </div>`;
+                listContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">🧸</div><p>布偶熊在空籃子裡等你。<br>新增一個閃念，織出你的第一份成就吧！</p></div>`;
                 return;
             }
 
             filteredTasks.forEach(task => {
-                const item = document.createElement("div");
-                item.className = `task-item ${task.completed ? 'completed' : ''}`;
-                
+                const item = document.createElement("div"); item.className = `task-item ${task.completed ? 'completed' : ''}`;
                 if(task.tag === "購物清單") item.style.borderLeftColor = "var(--accent-yellow)";
                 else if(task.tag === "想讀的書") item.style.borderLeftColor = "var(--accent-blue)";
                 else if(task.tag === "運動") item.style.borderLeftColor = "var(--accent-green)";
@@ -1218,15 +978,10 @@
                         <div class="custom-checkbox" onclick="toggleTask(${task.id})"><i class="fas fa-check"></i></div>
                         <div class="task-content" onclick="editTask(${task.id})">
                             <span class="task-text">${task.text}</span>
-                            <div class="task-badges">
-                                <span class="task-tag">${task.tag}</span>
-                                ${task.freq !== '單次' ? `<span class="task-freq"><i class="fas fa-redo-alt"></i> ${task.freq}</span>` : ''}
-                            </div>
+                            <div class="task-badges"><span class="task-tag">${task.tag}</span>${task.freq !== '單次' ? `<span class="task-freq"><i class="fas fa-redo-alt"></i> ${task.freq}</span>` : ''}</div>
                         </div>
                     </div>
-                    <button class="delete-btn" onclick="event.stopPropagation(); deleteTask(${task.id})">
-                        <i class="fas fa-scissors"></i>
-                    </button>
+                    <button class="delete-btn" onclick="event.stopPropagation(); deleteTask(${task.id})"><i class="fas fa-scissors"></i></button>
                 `;
                 listContainer.appendChild(item);
             });
