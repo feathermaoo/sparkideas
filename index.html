@@ -330,7 +330,7 @@
 
         <div class="input-card">
             <div class="input-row">
-                <input type="text" id="taskInput" placeholder="捕捉到一個手寫念頭...">
+                <input type="text" id="taskInput" placeholder="天外飛來一筆念頭...">
                 <button class="add-btn" id="addTaskBtn"><i class="fas fa-plus"></i></button>
             </div>
             <div class="section-label">🧵 選擇分類：</div>
@@ -720,7 +720,7 @@
         function editTask(id) {
             const task = state.tasks.find(t => t.id === id);
             if (!task) return;
-            const newText = prompt("✏️ 修改你的手寫念頭：", task.text);
+            const newText = prompt("✏️ 修改你的念頭：", task.text);
             if (newText && newText.trim() !== "") { task.text = newText.trim(); saveToStorage(); render(); }
         }
 
