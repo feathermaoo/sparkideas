@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>閃念任務簿 - 點子冒險</title>
+    <!-- 引入 FontAwesome 圖示 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入 Google 日系圓體字型 -->
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <!-- 引入 Chart.js 用於繪製可愛圖表 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -27,7 +30,7 @@
             margin: 0;
             padding: 0;
             font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent; /* 移除手機點擊藍色陰影 */
         }
 
         body {
@@ -39,6 +42,7 @@
             align-items: flex-start;
             min-height: 100vh;
             overflow-y: auto;
+            /* 打造溫馨的手作格紋布或針織紋理背景 */
             background-image: linear-gradient(rgba(204, 164, 131, 0.05) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(204, 164, 131, 0.05) 1px, transparent 1px);
             background-size: 20px 20px;
@@ -81,22 +85,10 @@
             margin-top: 2px;
         }
 
-        /* 雲端同步狀態條 */
+        /* 👑 雲端同步狀態條（依照羽毛指示，使用強制隱形魔法） */
         .sync-banner {
             display: none !important;
-            background-color: #eef7f2;
-            border: 1px solid #ccead6;
-            border-radius: 10px;
-            padding: 6px 12px;
-            font-size: 11px;
-            color: #4a8c5e;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: -4px;
         }
-
-        .sync-status.loading { color: #b56c4d; }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0) scale(1); }
@@ -422,12 +414,18 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            flex-grow: 1;
         }
 
+        /* 👑 點擊有輕微放大感提示可以修改 */
         .task-text {
             font-size: 14px;
             font-weight: 500;
             word-break: break-all;
+            transition: color 0.2s;
+        }
+        .task-text:active {
+            color: #b56c4d;
         }
 
         .task-item.completed .task-text {
@@ -530,7 +528,7 @@
             color: white;
         }
 
-        /* 備份按鈕 */
+        /* 備份按鈕（拿掉強制同步，避免羽毛誤觸） */
         .backup-section {
             display: flex;
             justify-content: center;
@@ -561,8 +559,8 @@
             <p>縫製每一個閃念，織成最棒的自己 🧶</p>
         </div>
 
-        <div class="sync-banner">
-            <span><i class="fas fa-cloud"></i> 雲端防歸零同步保險箱</span>
+        <!-- 後台同步條（隱形中） -->
+        <div class="sync-banner" style="display: none !important;">
             <span class="sync-status" id="syncStatus">讀取中...</span>
         </div>
 
@@ -617,13 +615,16 @@
 
         <div class="filter-row" id="filterRow"></div>
 
+        <!-- 可滑動任務清單 -->
         <div class="task-list" id="taskList"></div>
 
+        <!-- 歷程檢視抽屜按鈕 -->
         <div class="chart-toggle-header" id="chartToggleBtn">
             <span><i class="fas fa-chart-line"></i> 📊 查看冒險歷程圖表</span>
             <i class="fas fa-chevron-down" id="arrowIcon"></i>
         </div>
 
+        <!-- 隱藏的圖表抽屜內容 -->
         <div class="chart-container-wrapper" id="chartWrapper">
             <div class="chart-controls">
                 <span style="font-size: 12px; font-weight: bold; color: #b56c4d;">🧶 縫製能量歷史紀錄</span>
@@ -638,15 +639,12 @@
         <div class="backup-section">
             <button class="backup-btn" onclick="exportData()"><i class="fas fa-save"></i> 複製備份碼</button>
             <button class="backup-btn" onclick="importData()"><i class="fas fa-file-import"></i> 還原進度</button>
-            <button class="backup-btn" onclick="forceSyncCloud()"><i class="fas fa-sync"></i> 強制同步</button>
         </div>
     </div>
 
     <script>
-        // 👑 獨一無二的雲端儲存箱子識別號（由你的名字加密生成，確保專屬你）
         const CLOUD_STORAGE_KEY = "feather_quest_log_v1_sticky";
         const CLOUD_API_URL = `https://api.jsonbin.io/v3/b`;
-        // 公用免費唯讀/讀寫 Master Key，用來幫你自動託管進度
         const CLOUD_SECRET = "$2a$10$WpP69bV0cEn.iH6f6N7P6eS9p3SWhC3i97p6wPqQpU.vWfUqO3bI2"; 
 
         let state = {
@@ -658,7 +656,7 @@
             customTags: ["待辦任務", "購物清單", "想讀的書"],
             lastActiveDate: "",
             historyData: {},
-            binId: "" // 記錄分配到的雲端保險箱ID
+            binId: "" 
         };
 
         const titles = ["迷途夢想家", "見習冒險者", "精靈使者", "閃念掌控者", "行動傳奇"];
@@ -677,7 +675,6 @@
             "客戶": "fa-user-check"
         };
 
-        // 👑 網頁一打開，核心生命週期：先抓本地 ➔ 再去抓雲端同步覆蓋
         document.addEventListener("DOMContentLoaded", async () => {
             loadFromStorage();
             checkStreak();
@@ -685,8 +682,6 @@
             initEventListeners();
             renderSelectors();
             render();
-            
-            // 觸發雲端同步
             await syncWithCloud();
         });
 
@@ -704,22 +699,14 @@
 
         function saveToStorage() {
             localStorage.setItem("quest_log_state", JSON.stringify(state));
-            // 👑 本地一有變動，背景自動同步到雲端保險箱
             autoUploadCloud();
         }
 
-        // 👑 核心魔法：雲端下載與同步機制
         async function syncWithCloud() {
             const statusEl = document.getElementById("syncStatus");
-            statusEl.innerText = "正在連線雲端...";
-            statusEl.className = "sync-status loading";
-
-            // 檢查本地是否存過雲端保險箱 ID
             let savedBinId = state.binId || localStorage.getItem("quest_log_cloud_bin_id");
 
             if (!savedBinId) {
-                // 如果是全新無痕模式，去公共池找找看有沒有寫好的對應關係
-                statusEl.innerText = "首次建立雲端保險箱...";
                 await createNewCloudBin();
                 return;
             }
@@ -735,30 +722,21 @@
                     const cloudData = await res.json();
                     const cloudState = cloudData.record;
                     
-                    // 比較本地跟雲端的完成數量，誰多就聽誰的（防止無痕重整被蓋掉）
                     if (cloudState && (cloudState.completedCount >= state.completedCount || state.tasks.length === 0)) {
                         state = { ...state, ...cloudState, binId: savedBinId };
                         localStorage.setItem("quest_log_state", JSON.stringify(state));
                         renderSelectors();
                         render();
                         if (myChart) updateChart();
-                        statusEl.innerText = "雲端同步成功 ✨";
                     } else {
-                        // 本地比較新，把本地推上去
                         await uploadToCloud();
-                        statusEl.innerText = "本地資料已同步至雲端 👍";
                     }
-                } else {
-                    statusEl.innerText = "雲端讀取失敗，使用本地紀錄";
                 }
             } catch (error) {
                 console.error(error);
-                statusEl.innerText = "網路連線異常";
             }
-            statusEl.className = "sync-status";
         }
 
-        // 建立全新的雲端備份保險箱
         async function createNewCloudBin() {
             try {
                 const res = await fetch(CLOUD_API_URL, {
@@ -775,14 +753,12 @@
                     state.binId = data.metadata.id;
                     localStorage.setItem("quest_log_cloud_bin_id", state.binId);
                     localStorage.setItem("quest_log_state", JSON.stringify(state));
-                    document.getElementById("syncStatus").innerText = "已啟用雲端防掉檔功能 ✨";
                 }
             } catch (e) {
-                document.getElementById("syncStatus").innerText = "雲端保險箱連線失敗";
+                console.error(e);
             }
         }
 
-        // 上傳進度到雲端
         async function uploadToCloud() {
             if (!state.binId) return;
             try {
@@ -799,20 +775,12 @@
             }
         }
 
-        // 防抖動背景自動上傳（避免連點造成網路塞車）
         let uploadTimer = null;
         function autoUploadCloud() {
             if (uploadTimer) clearTimeout(uploadTimer);
-            document.getElementById("syncStatus").innerText = "同步中...";
             uploadTimer = setTimeout(async () => {
                 await uploadToCloud();
-                document.getElementById("syncStatus").innerText = "雲端已同步 ✨";
             }, 1500); 
-        }
-
-        async function forceSyncCloud() {
-            await syncWithCloud();
-            alert("🔮 雲端魔法陣同步完成！不論重新整理幾次，進度都幫你守護好囉！");
         }
 
         function renderSelectors() {
@@ -998,6 +966,19 @@
             }
         }
 
+        // 👑 新增：核心修改任務文字功能
+        function editTask(id) {
+            const task = state.tasks.find(t => t.id === id);
+            if (!task) return;
+            
+            const newText = prompt("✏️ 修改你的手寫念頭：", task.text);
+            if (newText && newText.trim() !== "") {
+                task.text = newText.trim();
+                saveToStorage(); // 儲存並自動同步雲端
+                render(); // 重新渲染畫面
+            }
+        }
+
         function deleteTask(id) {
             state.tasks = state.tasks.filter(t => t.id !== id);
             saveToStorage();
@@ -1152,10 +1133,11 @@
                 else if(task.tag === "保險" || task.tag === "客戶") item.style.borderLeftColor = "var(--accent-purple)";
                 else item.style.borderLeftColor = "var(--accent-pink)";
 
+                // 👑 把原本文字點擊事件獨立綁定 editTask，複選框維持 toggleTask
                 item.innerHTML = `
-                    <div class="task-left" onclick="toggleTask(${task.id})">
-                        <div class="custom-checkbox"><i class="fas fa-check"></i></div>
-                        <div class="task-content">
+                    <div class="task-left">
+                        <div class="custom-checkbox" onclick="toggleTask(${task.id})"><i class="fas fa-check"></i></div>
+                        <div class="task-content" onclick="editTask(${task.id})">
                             <span class="task-text">${task.text}</span>
                             <div class="task-badges">
                                 <span class="task-tag">${task.tag}</span>
