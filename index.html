@@ -37,8 +37,8 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            height: 100vh; /* 強制鎖定手機螢幕高度 */
-            overflow: hidden; /* 防止整個網頁亂漂、亂滾動 */
+            min-height: 100vh; /* 👑 允許網頁隨內容靈活微調高度 */
+            overflow-y: auto;  /* 👑 讓拉開抽屜後的溢出內容可以滾動看得到 */
             /* 打造溫馨的手作格紋布或針織紋理背景 */
             background-image: linear-gradient(rgba(204, 164, 131, 0.05) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(204, 164, 131, 0.05) 1px, transparent 1px);
@@ -48,17 +48,17 @@
         .container {
             width: 100%;
             max-width: 480px;
-            height: calc(100vh - 24px); /* 剛好符合扣掉上下 padding 的手機高度 */
             display: flex;
             flex-direction: column;
             gap: 12px;
+            padding-bottom: 24px; /* 👑 底部預留寬鬆的沙發區，不跟按鈕親到 */
         }
 
         /* 標題區（拼布手繪字體感） */
         .header {
             text-align: center;
             margin-bottom: 2px;
-            flex-shrink: 0; /* 鎖定不縮水 */
+            flex-shrink: 0;
         }
 
         .header h1 {
@@ -95,7 +95,7 @@
             box-shadow: 0 4px 12px rgba(166, 146, 130, 0.12);
             border: 2px dashed var(--stitch-color); /* 虛線縫線 */
             position: relative;
-            flex-shrink: 0; /* 鎖定不縮水 */
+            flex-shrink: 0;
         }
 
         .level-info {
@@ -200,7 +200,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            flex-shrink: 0; /* 鎖定不縮水 */
+            flex-shrink: 0;
         }
 
         .input-row {
@@ -226,15 +226,15 @@
             background-color: #ffffff;
         }
 
-        /* 👑 修正後：超完美不卡邊 正方形大按鈕 */
+        /* 超完美不卡邊 正方形大按鈕 */
         .add-btn {
             background-color: #e88d67;
             border: 2px solid #ffffff;
-            width: 44px; /* 固定正方形寬度 */
-            height: 44px; /* 固定正方形高度 */
+            width: 44px;
+            height: 44px;
             border-radius: 14px;
             color: white;
-            font-size: 18px; /* 讓加號變明顯 */
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
@@ -242,7 +242,7 @@
             align-items: center;
             box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
             transition: transform 0.1s;
-            flex-shrink: 0; /* 強制不被壓縮擠扁 */
+            flex-shrink: 0;
         }
 
         .add-btn:active { transform: scale(0.95); }
@@ -297,7 +297,7 @@
             color: white;
         }
 
-        /* 👑 修正後：精簡分類按鈕 */
+        /* 精簡分類按鈕 */
         .add-custom-tag-btn {
             background-color: transparent;
             border: 1px dashed #b56c4d;
@@ -307,7 +307,7 @@
 
         /* 下方篩選列布貼 */
         .filter-row {
-            flex-shrink: 0; /* 鎖定不縮水 */
+            flex-shrink: 0;
         }
         .filter-btn {
             background-color: var(--card-bg);
@@ -327,8 +327,8 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            flex-grow: 1; /* 吃掉手機剩下的所有空間 */
-            overflow-y: auto; /* 超出時，只有這裡可以上下滑動 */
+            max-height: 320px; /* 👑 限制任務列表最大高度，避免把底下的歷史抽屜完全推到太平洋 */
+            overflow-y: auto;  /* 讓任務可以在這裡面滑動 */
             padding-right: 2px;
         }
 
@@ -476,7 +476,7 @@
             align-items: center;
             border: 1px dashed var(--stitch-color);
             transition: all 0.2s;
-            flex-shrink: 0; /* 鎖定不縮水 */
+            flex-shrink: 0;
             margin-top: 2px;
         }
 
@@ -527,7 +527,8 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            padding-top: 2px;
+            padding-top: 6px;
+            padding-bottom: 12px; /* 👑 增加底部內縮，不被任何虛擬Home鍵擋住 */
             flex-shrink: 0;
         }
 
@@ -691,7 +692,6 @@
                 const iconClass = tagIcons[tag] || "fa-tag"; 
                 tagSelector.innerHTML += `<button class="tag-btn ${isActive}" data-tag="${tag}"><i class="fas ${iconClass}"></i> ${tag}</button>`;
             });
-            // 👑 這裡的新增按鈕也縮短成 + 分類
             tagSelector.innerHTML += `<button class="tag-btn add-custom-tag-btn" id="addCustomTagBtn"><i class="fas fa-plus"></i> 分類</button>`;
 
             const filterRow = document.getElementById("filterRow");
@@ -715,7 +715,7 @@
             });
 
             document.getElementById("addCustomTagBtn").addEventListener("click", () => {
-                const newTagName = prompt("請輸入新分類名稱（如：運動、保險）：");
+                const newTagName = prompt("請輸入新分類名稱（如：運動、習慣）：");
                 if (newTagName && newTagName.trim() !== "") {
                     const clean = newTagName.trim();
                     if (!state.customTags.includes(clean)) {
@@ -797,7 +797,6 @@
                 if (e.key === "Enter") addTask();
             });
 
-            // 抽屜拉開與關閉控制事件
             const toggleHeader = document.getElementById("chartToggleBtn");
             const wrapper = document.getElementById("chartWrapper");
             const arrow = document.getElementById("arrowIcon");
@@ -814,10 +813,13 @@
                     } else {
                         updateChart(); 
                     }
+                    // 👑 自動幫忙平滑滾動到抽屜的位置，防卡體驗加倍
+                    setTimeout(() => {
+                        toggleHeader.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 150);
                 }
             });
 
-            // 切換 7D / 30D 時間範圍
             document.querySelectorAll(".range-btn").forEach(btn => {
                 btn.addEventListener("click", (e) => {
                     document.querySelectorAll(".range-btn").forEach(b => b.classList.remove("active"));
@@ -997,7 +999,7 @@
             updateCounters();
 
             const listContainer = document.getElementById("taskList");
-            const currentScroll = listContainer.scrollTop; // 記錄捲軸位置防止抖動
+            const currentScroll = listContainer.scrollTop; 
             listContainer.innerHTML = "";
 
             const filteredTasks = state.tasks.filter(t => currentFilter === "全部" || t.tag === currentFilter);
