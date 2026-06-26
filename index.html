@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>閃念任務簿 - 點子冒險</title>
+    <!-- 引入 FontAwesome 圖示 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入 Google 日系圓體字型 -->
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #fcf8f2; /* 溫暖的日系手作奶油白 */
@@ -24,7 +27,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: "PingFang TC", "STHeitiTC-Light", "Microsoft JhengHei", sans-serif;
+            font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif;
         }
 
         body {
@@ -117,15 +120,15 @@
             background-color: var(--accent-yellow);
             border: 2px dashed #ffffff;
             color: #b56c4d;
-            width: 56px;
-            height: 56px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%; /* 圓形鈕扣感 */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-weight: bold;
-            font-size: 20px;
+            font-size: 18px;
             box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
         }
 
@@ -216,6 +219,7 @@
         .input-row {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         .input-row input {
@@ -235,19 +239,22 @@
             background-color: #ffffff;
         }
 
-        /* 像鈕扣或布標一樣的按鈕 */
+        /* 超顯眼大按鈕 */
         .add-btn {
             background-color: #e88d67;
             border: 2px solid #ffffff;
-            width: 46px;
+            width: 75px;
             height: 46px;
             border-radius: 14px;
             color: white;
-            font-size: 16px;
+            font-size: 13px;
+            font-weight: bold;
             cursor: pointer;
             display: flex;
+            flex-direction: row;
             justify-content: center;
             align-items: center;
+            gap: 5px;
             box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
             transition: transform 0.1s;
         }
@@ -348,7 +355,7 @@
             color: var(--accent-pink);
         }
 
-        /* 任務項目 - 移動小棉被質感 */
+        /* 任務項目 */
         .task-item {
             background-color: var(--card-bg);
             border-radius: 16px;
@@ -509,8 +516,8 @@
 
         <div class="input-card">
             <div class="input-row">
-                <input type="text" id="taskInput" placeholder="捕捉到一個念頭...">
-                <button class="add-btn" id="addTaskBtn"><i class="fas fa-needle"></i></button>
+                <input type="text" id="taskInput" placeholder="捕捉到一個手寫念頭...">
+                <button class="add-btn" id="addTaskBtn"><i class="fas fa-pencil-alt"></i>新增</button>
             </div>
             
             <div class="section-label">🧵 選擇分類：</div>
@@ -551,6 +558,16 @@
         let currentSelectedFreq = "單次";
         let currentFilter = "全部";
 
+        // 定義分類名稱對應的可愛手作圖示表
+        const tagIcons = {
+            "待辦任務": "fa-clipboard-list",
+            "購物清單": "fa-shopping-bag",
+            "想讀的書": "fa-book-open",
+            "運動": "fa-dumbbell",
+            "保險": "fa-shield-heart",
+            "客戶": "fa-user-check"
+        };
+
         document.addEventListener("DOMContentLoaded", () => {
             loadFromStorage();
             checkStreak();
@@ -583,7 +600,8 @@
             tagSelector.innerHTML = "";
             state.customTags.forEach(tag => {
                 const isActive = tag === currentSelectedTag ? "active" : "";
-                tagSelector.innerHTML += `<button class="tag-btn ${isActive}" data-tag="${tag}"><i class="fas fa-yarn"></i> ${tag}</button>`;
+                const iconClass = tagIcons[tag] || "fa-tag"; 
+                tagSelector.innerHTML += `<button class="tag-btn ${isActive}" data-tag="${tag}"><i class="fas ${iconClass}"></i> ${tag}</button>`;
             });
             tagSelector.innerHTML += `<button class="tag-btn add-custom-tag-btn" id="addCustomTagBtn"><i class="fas fa-plus"></i> 新增分類</button>`;
 
@@ -591,7 +609,8 @@
             filterRow.innerHTML = `<button class="filter-btn ${currentFilter === '全部' ? 'active' : ''}" data-filter="全部">✨ 全部 <span id="count-全部">0</span></button>`;
             state.customTags.forEach(tag => {
                 const isActive = tag === currentFilter ? "active" : "";
-                filterRow.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${tag}">🧸 ${tag} <span id="count-${tag}">0</span></button>`;
+                const iconClass = tagIcons[tag] || "fa-tag";
+                filterRow.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${tag}"><i class="fas ${iconClass}"></i> ${tag} <span id="count-${tag}">0</span></button>`;
             });
 
             rebindSelectorEvents();
@@ -607,7 +626,7 @@
             });
 
             document.getElementById("addCustomTagBtn").addEventListener("click", () => {
-                const newTagName = prompt("請輸入分類名稱：");
+                const newTagName = prompt("請輸入新分類名稱（如：運動、保險）：");
                 if (newTagName && newTagName.trim() !== "") {
                     const clean = newTagName.trim();
                     if (!state.customTags.includes(clean)) {
@@ -669,7 +688,7 @@
             if (state.xp >= 100) {
                 state.xp -= 100;
                 state.level += 1;
-                alert(`🧶 自我成長大升級！恭喜你達到了 Lv.${state.level}【${titles[Math.min(Math.floor((state.level-1)/3), titles.length-1)]}】！`);
+                alert(`🔮 自我成長大升級！恭喜你達到了 Lv.${state.level}【${titles[Math.min(Math.floor((state.level-1)/3), titles.length-1)]}】！`);
             }
             saveToStorage();
             render();
@@ -766,7 +785,14 @@
         }
 
         function render() {
-            document.getElementById("levelDisplay").innerHTML = `${state.level}<span>Lv</span>`;
+            // 依據方案 C 修改等級可愛圖示
+            let lvlIcon = "🛡️"; // Lv.1-3 手工小盾牌
+            if (state.level > 3 && state.level <= 6) lvlIcon = "⚔️";  // Lv.4-6 見習騎士木劍
+            if (state.level > 6 && state.level <= 10) lvlIcon = "🪄"; // Lv.7-10 羊毛氈魔法棒
+            if (state.level > 10) lvlIcon = "👑"; // Lv.11以上 拼布小皇冠
+
+            document.getElementById("levelDisplay").innerHTML = `${state.level}<span style="font-size:11px; font-weight:normal; margin-top:2px;">${lvlIcon}</span>`;
+            
             const titleIndex = Math.min(Math.floor((state.level - 1) / 3), titles.length - 1);
             document.getElementById("titleDisplay").innerText = titles[titleIndex];
             document.getElementById("xpText").innerText = `${state.xp} / 100 XP`;
@@ -793,9 +819,12 @@
             filteredTasks.forEach(task => {
                 const item = document.createElement("div");
                 item.className = `task-item ${task.completed ? 'completed' : ''}`;
-                // 依據不同分類給予不同的滾邊顏色
+                
+                // 依據不同分類給予不同的手作滾邊顏色
                 if(task.tag === "購物清單") item.style.borderLeftColor = "var(--accent-yellow)";
                 else if(task.tag === "想讀的書") item.style.borderLeftColor = "var(--accent-blue)";
+                else if(task.tag === "運動") item.style.borderLeftColor = "var(--accent-green)";
+                else if(task.tag === "保險" || task.tag === "客戶") item.style.borderLeftColor = "var(--accent-purple)";
                 else item.style.borderLeftColor = "var(--accent-pink)";
 
                 item.innerHTML = `
