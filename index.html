@@ -411,7 +411,7 @@
             
             // 👑 修正亮點：如果之前曾經成功過，強制維持在雲端同步視覺，拒絕被自動打回在地記憶體！
             if (localStorage.getItem("g_drive_token_active") === "true") {
-                setSyncUIMode(true);
+                setSyncUIMode(true, "syncing");
                 googleAccessToken = localStorage.getItem("g_drive_access_token");
             }
         });
@@ -434,6 +434,7 @@
                         callback: async (resp) => {
                             if (resp.error) {
                                 console.error("授權回傳錯誤:", resp.error);
+                                setSyncUIMode(true, "error");
                                 return;
                             }
                             googleAccessToken = resp.access_token;
@@ -457,10 +458,12 @@
         // 👑 全新加裝的齒輪：跨裝置無條件強制對齊雲端進度
         async function forceLoadFromGoogleDrive() {
             if (!googleAccessToken) return;
+            setSyncUIMode(true, "syncing");
             try {
                 let res = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder', {
                     headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                 });
+                if (!res.ok) throw new Error(`雲端清單讀取失敗：${res.status}`);
                 let data = await res.json();
                 let file = data.files.find(f => f.name === 'spark_ideas_backup.json');
                 
@@ -468,6 +471,7 @@
                     let fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`, {
                         headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                     });
+                    if (!fileRes.ok) throw new Error(`雲端資料下載失敗：${fileRes.status}`);
                     let cloudState = await fileRes.json();
                     
                     // ⚡️ 只要雲端有內容，直接無條件覆蓋本地的空白進度，達成手機、電腦完美同步！
@@ -481,15 +485,35 @@
                         console.log("✨ 雲端大腦同步成功，已將最高進度同步至本裝置！");
                     }
                 }
+                setSyncUIMode(true, "synced");
             } catch (e) { 
                 console.error("安全下載失敗", e);
+                setSyncUIMode(true, "error");
             }
         }
 
-        function setSyncUIMode(isCloud) {
+        function setSyncUIMode(isCloud, status = "synced") {
             if(isCloud) {
                 document.getElementById("gBtnText").innerText = "已連動雲端";
-                document.getElementById("syncIconText").innerHTML = `<i class="fas fa-cloud" style="color:#a8d3bb;"></i> 雲端模式：Google Drive 同步中`;
+                const statusMap = {
+                    syncing: {
+                        icon: "fa-cloud-arrow-up",
+                        color: "#a3c9e6",
+                        text: "雲端模式：同步中..."
+                    },
+                    synced: {
+                        icon: "fa-cloud-check",
+                        color: "#a8d3bb",
+                        text: "雲端模式：已同步"
+                    },
+                    error: {
+                        icon: "fa-triangle-exclamation",
+                        color: "#f7a3a1",
+                        text: "雲端模式：同步失敗"
+                    }
+                };
+                const currentStatus = statusMap[status] || statusMap.synced;
+                document.getElementById("syncIconText").innerHTML = `<i class="fas ${currentStatus.icon}" style="color:${currentStatus.color};"></i> ${currentStatus.text}`;
             } else {
                 document.getElementById("gBtnText").innerText = "連動 Google 帳號";
                 document.getElementById("syncIconText").innerHTML = `<i class="fas fa-key"></i> 進度儲存：在地記憶體`;
@@ -506,10 +530,12 @@
 
         async function loadFromGoogleDrive() {
             if (!googleAccessToken) return;
+            setSyncUIMode(true, "syncing");
             try {
                 let res = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder', {
                     headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                 });
+                if (!res.ok) throw new Error(`雲端清單讀取失敗：${res.status}`);
                 let data = await res.json();
                 let file = data.files.find(f => f.name === 'spark_ideas_backup.json');
                 
@@ -517,6 +543,7 @@
                     let fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`, {
                         headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                     });
+                    if (!fileRes.ok) throw new Error(`雲端資料下載失敗：${fileRes.status}`);
                     let cloudState = await fileRes.json();
                     if (cloudState && (cloudState.completedCount >= state.completedCount || state.tasks.length === 0)) {
                         state = { ...state, ...cloudState };
@@ -528,8 +555,10 @@
                         if (myChart) updateChart();
                     }
                 }
+                setSyncUIMode(true, "synced");
             } catch (e) { 
                 console.error("雲端讀取錯誤", e);
+                setSyncUIMode(true, "error");
             }
         }
 
@@ -539,10 +568,12 @@
             }
             if (!googleAccessToken) return;
 
+            setSyncUIMode(true, "syncing");
             try {
                 let res = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder', {
                     headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                 });
+                if (!res.ok) throw new Error(`雲端清單讀取失敗：${res.status}`);
                 let data = await res.json();
                 let file = data.files.find(f => f.name === 'spark_ideas_backup.json');
                 
@@ -563,12 +594,17 @@
                     method = 'PATCH';
                 }
 
-                await fetch(url, {
+                let uploadRes = await fetch(url, {
                     method: method,
                     headers: { 'Authorization': `Bearer ${googleAccessToken}`, 'Content-Type': `multipart/related; boundary=${boundary}` },
                     body: multipartRequestBody
                 });
-            } catch (e) { console.error("雲端儲存錯誤", e); }
+                if (!uploadRes.ok) throw new Error(`雲端儲存失敗：${uploadRes.status}`);
+                setSyncUIMode(true, "synced");
+            } catch (e) {
+                console.error("雲端儲存錯誤", e);
+                setSyncUIMode(true, "error");
+            }
         }
 
         function loadFromStorage() {
@@ -900,3 +936,4 @@
     </script>
 </body>
 </html>
+
