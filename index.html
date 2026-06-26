@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>閃念精靈任務簿 - 療癒系大腦冒險</title>
+    <title>手作精靈任務簿 - 暖心布偶的點子冒險</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #f4f6fb;
+            --bg-color: #fcf8f2; /* 溫暖的日系手作奶油白 */
             --card-bg: #ffffff;
-            --accent-pink: #ffb7b2;
-            --accent-green: #e2f0cb;
-            --accent-yellow: #ffdac1;
-            --accent-blue: #b5ead7;
-            --accent-purple: #c7ceea;
-            --text-main: #5d576b;
-            --text-muted: #9a94a6;
-            --border-radius: 24px;
+            --stitch-color: #cca483; /* 縫線的咖啡色 */
+            --accent-pink: #f7a3a1; /* 手作布偶粉 */
+            --accent-green: #a8d3bb; /* 森林手繪綠 */
+            --accent-yellow: #fcd59b; /* 溫馨黃 */
+            --accent-blue: #a3c9e6; /* 晴空藍 */
+            --accent-purple: #c5b3e6; /* 薰衣草紫 */
+            --text-main: #695749; /* 深咖啡色字體，拒絕死黑 */
+            --text-muted: #a69282;
+            --border-radius: 20px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: "PingFang TC", "STHeitiTC-Light", "Microsoft JhengHei", sans-serif;
         }
 
         body {
@@ -34,10 +35,10 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            background-image: radial-gradient(rgba(226, 240, 203, 0.4) 15%, transparent 16%),
-                              radial-gradient(rgba(255, 183, 178, 0.3) 15%, transparent 16%);
-            background-size: 30px 30px;
-            background-position: 0 0, 15px 15px;
+            /* 打造溫馨的手作格紋布或針織紋理背景 */
+            background-image: linear-gradient(rgba(204, 164, 131, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(204, 164, 131, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
         .container {
@@ -48,19 +49,16 @@
             gap: 20px;
         }
 
-        /* 標題區 */
+        /* 標題區（拼布手繪字體感） */
         .header {
             text-align: center;
             margin-bottom: 5px;
-            position: relative;
         }
 
         .header h1 {
-            color: #7b68ee;
-            font-size: 28px;
+            color: #b56c4d; /* 溫暖的皮革紅棕色 */
+            font-size: 26px;
             font-weight: bold;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -69,27 +67,42 @@
 
         .header h1 i {
             color: var(--accent-pink);
-            animation: float 2s ease-in-out infinite;
+            animation: bounce 2s ease-in-out infinite;
         }
 
         .header p {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
+            margin-top: 4px;
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(10deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-4px) scale(1.05); }
         }
 
-        /* 狀態卡片 */
-        .status-card {
+        /* 經典拼布手作卡片（縫線滾邊效果） */
+        .stitch-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
             padding: 20px;
-            box-shadow: 0 8px 20px rgba(199, 206, 234, 0.3);
-            border: 2px solid #ffffff;
+            box-shadow: 0 6px 16px rgba(166, 146, 130, 0.15);
+            border: 2px dashed var(--stitch-color); /* 虛線縫線 */
+            position: relative;
+        }
+
+        /* 裝飾用的小布標 */
+        .stitch-card::after {
+            content: "handmade";
+            position: absolute;
+            top: 12px;
+            right: -8px;
+            background-color: #e88d67;
+            color: white;
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 4px 0 0 4px;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .level-info {
@@ -99,25 +112,26 @@
             margin-bottom: 15px;
         }
 
+        /* 等級布標 */
         .level-badge {
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-yellow));
-            color: #ffffff;
-            width: 54px;
-            height: 54px;
-            border-radius: 18px;
+            background-color: var(--accent-yellow);
+            border: 2px dashed #ffffff;
+            color: #b56c4d;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%; /* 圓形鈕扣感 */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-weight: bold;
             font-size: 20px;
-            box-shadow: 0 4px 10px rgba(255, 183, 178, 0.4);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
         }
 
         .level-badge span {
             font-size: 9px;
-            text-transform: uppercase;
+            font-weight: normal;
         }
 
         .level-progress-container {
@@ -132,26 +146,26 @@
         }
 
         .current-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
-            color: #7b68ee;
+            color: #b56c4d;
         }
 
         .xp-text {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
         }
 
         .progress-bar-bg {
-            background-color: #f0edf5;
-            height: 10px;
-            border-radius: 5px;
+            background-color: #f3ece4;
+            height: 12px;
+            border-radius: 6px;
             overflow: hidden;
-            width: 100%;
+            border: 1px solid #e2d7cb;
         }
 
         .progress-bar-fill {
-            background: linear-gradient(90deg, #b5ead7, #c7ceea);
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-yellow));
             height: 100%;
             width: 0%;
             transition: width 0.4s ease;
@@ -164,25 +178,22 @@
         }
 
         .stat-box {
-            background-color: #fbfaff;
-            border-radius: 16px;
-            padding: 12px;
+            background-color: #fffdfa;
+            border-radius: 14px;
+            padding: 10px 12px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            border: 1px dashed var(--accent-purple);
+            gap: 10px;
+            border: 1px solid #ebdccb;
         }
 
-        .stat-icon {
-            font-size: 20px;
-        }
-        .stat-icon.fire { color: #ffb7b2; }
-        .stat-icon.check { color: #b5ead7; }
+        .stat-icon { font-size: 18px; }
+        .stat-icon.fire { color: var(--accent-pink); }
+        .stat-icon.check { color: var(--accent-green); }
 
         .stat-details div:first-child {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            color: var(--text-main);
         }
 
         .stat-details div:last-child {
@@ -195,8 +206,8 @@
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
             padding: 18px;
-            box-shadow: 0 8px 20px rgba(199, 206, 234, 0.3);
-            border: 2px solid #ffffff;
+            box-shadow: 0 6px 16px rgba(166, 146, 130, 0.15);
+            border: 2px dashed var(--stitch-color);
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -209,35 +220,35 @@
 
         .input-row input {
             flex-grow: 1;
-            background-color: #f7f6fb;
-            border: 1px solid #e1dfeb;
-            border-radius: 16px;
+            background-color: #faf6f0;
+            border: 2px solid #ebdccb;
+            border-radius: 14px;
             padding: 12px 16px;
             color: var(--text-main);
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         .input-row input:focus {
-            border-color: #c7ceea;
+            border-color: var(--accent-pink);
             background-color: #ffffff;
-            box-shadow: 0 0 8px rgba(199, 206, 234, 0.5);
         }
 
+        /* 像鈕扣或布標一樣的按鈕 */
         .add-btn {
-            background: linear-gradient(135deg, #c7ceea, #b5ead7);
-            border: none;
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
+            background-color: #e88d67;
+            border: 2px solid #ffffff;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(199, 206, 234, 0.4);
+            box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
             transition: transform 0.1s;
         }
 
@@ -247,7 +258,7 @@
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding-bottom: 6px;
+            padding-bottom: 4px;
         }
 
         .tag-selector::-webkit-scrollbar, .frequency-selector::-webkit-scrollbar, .filter-row::-webkit-scrollbar {
@@ -259,15 +270,17 @@
             color: var(--text-muted);
             margin-top: 2px;
             margin-bottom: -4px;
+            font-weight: bold;
         }
 
+        /* 手作布貼風格按鈕 */
         .tag-btn, .freq-btn, .filter-btn {
-            background-color: #f7f6fb;
-            border: 1px solid #f7f6fb;
-            color: var(--text-muted);
+            background-color: #faf6f0;
+            border: 1px dashed var(--stitch-color);
+            color: var(--text-main);
             padding: 6px 14px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             white-space: nowrap;
             display: flex;
@@ -277,33 +290,37 @@
         }
 
         .tag-btn.active {
-            background-color: #ffb7b2;
-            border-color: #ffb7b2;
+            background-color: var(--accent-pink);
+            border-style: solid;
+            border-color: #ffffff;
             color: white;
         }
 
         .freq-btn.active {
-            background-color: #b5ead7;
-            border-color: #b5ead7;
+            background-color: var(--accent-green);
+            border-style: solid;
+            border-color: #ffffff;
             color: white;
         }
 
         .add-custom-tag-btn {
             background-color: transparent;
-            border: 1px dashed #7b68ee;
-            color: #7b68ee;
+            border: 1px dashed #b56c4d;
+            color: #b56c4d;
         }
 
-        /* 篩選列 */
+        /* 下方篩選列布貼 */
         .filter-btn {
             background-color: var(--card-bg);
-            box-shadow: 0 4px 10px rgba(199, 206, 234, 0.15);
+            border: 1px dashed #ebdccb;
+            box-shadow: 0 4px 8px rgba(166, 146, 130, 0.08);
         }
 
         .filter-btn.active {
-            background-color: #c7ceea;
+            background-color: var(--accent-blue);
+            border-style: solid;
+            border-color: #ffffff;
             color: white;
-            border-color: #c7ceea;
         }
 
         /* 任務列表 */
@@ -315,35 +332,39 @@
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 35px 20px;
             color: var(--text-muted);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            border: 2px dashed #ebdccb;
         }
 
         .empty-icon {
-            font-size: 44px;
+            font-size: 40px;
             color: var(--accent-pink);
-            animation: float 2.5s ease-in-out infinite;
         }
 
+        /* 任務項目 - 移動小棉被質感 */
         .task-item {
             background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 14px 16px;
+            border-radius: 16px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            box-shadow: 0 4px 12px rgba(199, 206, 234, 0.15);
-            border: 1px solid #ffffff;
+            box-shadow: 0 4px 10px rgba(166, 146, 130, 0.1);
+            border: 1px solid #f3ece4;
+            border-left: 5px solid var(--accent-pink); /* 左側滾邊 */
             animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -355,23 +376,24 @@
             cursor: pointer;
         }
 
+        /* 鈕扣型複選框 */
         .custom-checkbox {
             width: 22px;
             height: 22px;
-            border: 2px solid #dcd9e8;
-            border-radius: 8px;
+            border: 2px solid #cca483;
+            border-radius: 50%; /* 鈕扣 */
             display: flex;
             justify-content: center;
             align-items: center;
             color: transparent;
-            font-size: 12px;
+            font-size: 11px;
             transition: all 0.2s;
             background-color: #ffffff;
         }
 
         .task-item.completed .custom-checkbox {
-            background-color: #b5ead7;
-            border-color: #b5ead7;
+            background-color: var(--accent-green);
+            border-color: var(--accent-green);
             color: white;
         }
 
@@ -382,8 +404,8 @@
         }
 
         .task-text {
-            font-size: 15px;
-            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 500;
         }
 
         .task-item.completed .task-text {
@@ -399,33 +421,33 @@
 
         .task-tag {
             font-size: 10px;
-            color: #7b68ee;
-            background-color: #f0edf5;
-            padding: 2px 8px;
-            border-radius: 6px;
+            color: #b56c4d;
+            background-color: #f7ede2;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         .task-freq {
             font-size: 10px;
-            color: #ff7b7b;
-            background-color: #fff0f0;
-            padding: 2px 8px;
-            border-radius: 6px;
+            color: #e88d67;
+            background-color: #fff3ed;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         .delete-btn {
             background: none;
             border: none;
-            color: #dcd9e8;
+            color: #ebdccb;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             padding: 4px;
             transition: color 0.2s;
         }
 
-        .delete-btn:hover { color: #ffb7b2; }
+        .delete-btn:hover { color: var(--accent-pink); }
 
-        /* 備份按鈕區區塊 */
+        /* 備份按鈕 */
         .backup-section {
             display: flex;
             justify-content: center;
@@ -437,24 +459,24 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
-        .backup-btn:hover { color: #7b68ee; }
+        .backup-btn:hover { color: #b56c4d; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-fairy"></i> 閃念精靈任務簿</h1>
-            <p>與小精靈一起，把念頭變成美麗的冒險 ✨</p>
+            <h1><i class="fas fa-teddy-bear"></i> 手作精靈任務簿</h1>
+            <p>縫製每一個閃念，織成最棒的自己 🧶</p>
         </div>
 
-        <div class="status-card">
+        <div class="stitch-card">
             <div class="level-info">
                 <div class="level-badge" id="levelDisplay">1<span>Lv</span></div>
                 <div class="level-progress-container">
@@ -469,17 +491,17 @@
             </div>
             <div class="stats-grid">
                 <div class="stat-box">
-                    <div class="stat-icon fire"><i class="fas fa-wand-magic-sparkles"></i></div>
+                    <div class="stat-icon fire"><i class="fas fa-heart"></i></div>
                     <div class="stat-details">
                         <div id="streakDisplay">0</div>
-                        <div>連續冒險天數</div>
+                        <div>連續記錄天數</div>
                     </div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-icon check"><i class="fas fa-star"></i></div>
+                    <div class="stat-icon check"><i class="fas fa-gift"></i></div>
                     <div class="stat-details">
                         <div id="completedCountDisplay">0</div>
-                        <div>已收服閃念</div>
+                        <div>已缝製點子</div>
                     </div>
                 </div>
             </div>
@@ -487,19 +509,19 @@
 
         <div class="input-card">
             <div class="input-row">
-                <input type="text" id="taskInput" placeholder="捕捉到一個閃念精靈...">
-                <button class="add-btn" id="addTaskBtn"><i class="fas fa-feather-pointed"></i></button>
+                <input type="text" id="taskInput" placeholder="捕捉到一個手繪念頭...">
+                <button class="add-btn" id="addTaskBtn"><i class="fas fa-needle"></i></button>
             </div>
             
-            <div class="section-label">選擇冒險分類：</div>
+            <div class="section-label">🧵 選擇手作分類：</div>
             <div class="tag-selector" id="tagSelector"></div>
 
-            <div class="section-label">重複召喚頻率：</div>
+            <div class="section-label">🔄 重複縫製頻率：</div>
             <div class="frequency-selector" id="freqSelector">
-                <button class="freq-btn active" data-freq="單次"><i class="fas fa-leaf"></i> 單次</button>
-                <button class="freq-btn" data-freq="每日"><i class="fas fa-sun"></i> 每日</button>
-                <button class="freq-btn" data-freq="每週"><i class="fas fa-calendar-week"></i> 每週</button>
-                <button class="freq-btn" data-freq="每月"><i class="fas fa-moon"></i> 每月</button>
+                <button class="freq-btn active" data-freq="單次"><i class="fas fa-star"></i> 單次</button>
+                <button class="freq-btn" data-freq="每日"><i class="fas fa-clock"></i> 每日</button>
+                <button class="freq-btn" data-freq="每週"><i class="fas fa-calendar-alt"></i> 每週</button>
+                <button class="freq-btn" data-freq="每月"><i class="fas fa-cloud"></i> 每月</button>
             </div>
         </div>
 
@@ -508,8 +530,8 @@
         <div class="task-list" id="taskList"></div>
 
         <div class="backup-section">
-            <button class="backup-btn" onclick="exportData()"><i class="fas fa-download"></i> 複製備份代碼</button>
-            <button class="backup-btn" onclick="importData()"><i class="fas fa-upload"></i> 還原備份資料</button>
+            <button class="backup-btn" onclick="exportData()"><i class="fas fa-save"></i> 複製布偶備份碼</button>
+            <button class="backup-btn" onclick="importData()"><i class="fas fa-file-import"></i> 還原布偶進度</button>
         </div>
     </div>
 
@@ -561,7 +583,7 @@
             tagSelector.innerHTML = "";
             state.customTags.forEach(tag => {
                 const isActive = tag === currentSelectedTag ? "active" : "";
-                tagSelector.innerHTML += `<button class="tag-btn ${isActive}" data-tag="${tag}"><i class="fas fa-paw"></i> ${tag}</button>`;
+                tagSelector.innerHTML += `<button class="tag-btn ${isActive}" data-tag="${tag}"><i class="fas fa-yarn"></i> ${tag}</button>`;
             });
             tagSelector.innerHTML += `<button class="tag-btn add-custom-tag-btn" id="addCustomTagBtn"><i class="fas fa-plus"></i> 新增分類</button>`;
 
@@ -569,7 +591,7 @@
             filterRow.innerHTML = `<button class="filter-btn ${currentFilter === '全部' ? 'active' : ''}" data-filter="全部">✨ 全部 <span id="count-全部">0</span></button>`;
             state.customTags.forEach(tag => {
                 const isActive = tag === currentFilter ? "active" : "";
-                filterRow.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${tag}">🧚 ${tag} <span id="count-${tag}">0</span></button>`;
+                filterRow.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${tag}">🧸 ${tag} <span id="count-${tag}">0</span></button>`;
             });
 
             rebindSelectorEvents();
@@ -585,7 +607,7 @@
             });
 
             document.getElementById("addCustomTagBtn").addEventListener("click", () => {
-                const newTagName = prompt("請輸入新魔法分類名稱：");
+                const newTagName = prompt("請輸入新棉線分類名稱：");
                 if (newTagName && newTagName.trim() !== "") {
                     const clean = newTagName.trim();
                     if (!state.customTags.includes(clean)) {
@@ -647,7 +669,7 @@
             if (state.xp >= 100) {
                 state.xp -= 100;
                 state.level += 1;
-                alert(`✨ 精靈能量爆發！恭喜你達到了 Lv.${state.level}【${titles[Math.min(Math.floor((state.level-1)/3), titles.length-1)]}】！`);
+                alert(`🧶 針線活大升級！恭喜你達到了 Lv.${state.level}【${titles[Math.min(Math.floor((state.level-1)/3), titles.length-1)]}】！`);
             }
             saveToStorage();
             render();
@@ -706,7 +728,6 @@
             render();
         }
 
-        // 雲端備份魔法替代方案
         function exportData() {
             const code = btoa(encodeURIComponent(JSON.stringify(state)));
             navigator.clipboard.writeText(code).then(() => {
@@ -763,8 +784,8 @@
             if (filteredTasks.length === 0) {
                 listContainer.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-icon">🧚</div>
-                        <p>目前沒有閃念精靈停留。<br>新增一個閃念，召喚你的小精靈吧！</p>
+                        <div class="empty-icon">🧸</div>
+                        <p>布偶熊在空籃子裡等你。<br>新增一個閃念，織出你的第一個小玩具吧！</p>
                     </div>`;
                 return;
             }
@@ -772,6 +793,11 @@
             filteredTasks.forEach(task => {
                 const item = document.createElement("div");
                 item.className = `task-item ${task.completed ? 'completed' : ''}`;
+                // 依據不同分類給予不同的滾邊顏色
+                if(task.tag === "購物清單") item.style.borderLeftColor = "var(--accent-yellow)";
+                else if(task.tag === "想讀的書") item.style.borderLeftColor = "var(--accent-blue)";
+                else item.style.borderLeftColor = "var(--accent-pink)";
+
                 item.innerHTML = `
                     <div class="task-left" onclick="toggleTask(${task.id})">
                         <div class="custom-checkbox"><i class="fas fa-check"></i></div>
@@ -779,12 +805,12 @@
                             <span class="task-text">${task.text}</span>
                             <div class="task-badges">
                                 <span class="task-tag">${task.tag}</span>
-                                ${task.freq !== '單次' ? `<span class="task-freq"><i class="fas fa-sync"></i> ${task.freq}</span>` : ''}
+                                ${task.freq !== '單次' ? `<span class="task-freq"><i class="fas fa-redo-alt"></i> ${task.freq}</span>` : ''}
                             </div>
                         </div>
                     </div>
                     <button class="delete-btn" onclick="event.stopPropagation(); deleteTask(${task.id})">
-                        <i class="fas fa-trash"></i>
+                        <i class="fas fa-scissors"></i>
                     </button>
                 `;
                 listContainer.appendChild(item);
