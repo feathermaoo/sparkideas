@@ -280,7 +280,7 @@
         }
 
         /* 手作布貼風格按鈕 */
-        .tag-btn, .freq-btn, .filter-btn {
+        .tag-btn, .freq-btn, .filter-btn, .range-btn {
             background-color: #faf6f0;
             border: 1px dashed var(--stitch-color);
             color: var(--text-main);
@@ -453,23 +453,63 @@
 
         .delete-btn:hover { color: var(--accent-pink); }
 
-        /* 歷程進度圖表卡片 */
-        .chart-card {
+        /* 歷程檢視整合抽屜卡片外觀 */
+        .chart-toggle-header {
+            background-color: #ebdccb;
+            color: #b56c4d;
+            padding: 10px 16px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px dashed var(--stitch-color);
+            transition: all 0.2s;
+            margin-top: 5px;
+        }
+        .chart-toggle-header:hover { background-color: #e2d2c1; }
+
+        .chart-container-wrapper {
+            display: none; /* 預設收起不顯示 */
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
             padding: 16px;
             box-shadow: 0 6px 16px rgba(166, 146, 130, 0.15);
             border: 2px dashed var(--stitch-color);
+            flex-direction: column;
+            gap: 12px;
+            animation: slideDown 0.3s ease-out;
         }
 
-        .chart-header {
-            font-size: 13px;
-            font-weight: bold;
-            color: #b56c4d;
-            margin-bottom: 10px;
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chart-controls {
             display: flex;
+            justify-content: space-between;
             align-items: center;
+        }
+
+        .range-selector-row {
+            display: flex;
             gap: 6px;
+        }
+
+        .range-btn {
+            padding: 4px 10px;
+            font-size: 11px;
+            border-radius: 12px;
+        }
+
+        .range-btn.active {
+            background-color: var(--accent-blue);
+            border-style: solid;
+            border-color: #ffffff;
+            color: white;
         }
 
         /* 備份按鈕 */
@@ -554,9 +594,20 @@
 
         <div class="task-list" id="taskList"></div>
 
-        <div class="chart-card">
-            <div class="chart-header"><i class="fas fa-chart-line"></i> 🧶 過去一週縫製歷程</div>
-            <canvas id="historyChart" style="max-height: 160px; width: 100%;"></canvas>
+        <div class="chart-toggle-header" id="chartToggleBtn">
+            <span><i class="fas fa-chart-line"></i> 📊 點擊拉開：查看冒險歷程圖表</span>
+            <i class="fas fa-chevron-down" id="arrowIcon"></i>
+        </div>
+
+        <div class="chart-container-wrapper" id="chartWrapper">
+            <div class="chart-controls">
+                <span style="font-size: 12px; font-weight: bold; color: #b56c4d;">🧶 縫製能量歷史紀錄</span>
+                <div class="range-selector-row">
+                    <button class="range-btn active" data-range="7">7D</button>
+                    <button class="range-btn" data-range="30">30D</button>
+                </div>
+            </div>
+            <canvas id="historyChart" style="max-height: 150px; width: 100%;"></canvas>
         </div>
 
         <div class="backup-section">
@@ -581,6 +632,7 @@
         let currentSelectedTag = "待辦任務";
         let currentSelectedFreq = "單次";
         let currentFilter = "全部";
+        let currentRange = 7; // 預設為 7 天
         let myChart = null;
 
         // 定義分類名稱對應的可愛手作圖示表
@@ -600,7 +652,6 @@
             initEventListeners();
             renderSelectors();
             render();
-            initChart(); // 初始化圖表
         });
 
         function loadFromStorage() {
@@ -696,6 +747,7 @@
             const lastResetDate = localStorage.getItem("last_reset_date");
             if (lastResetDate !== todayStr) {
                 let changed = false;
+                const Skinner = new Date();
                 const today = new Date();
                 state.tasks.forEach(t => {
                     if (t.completed && t.freq !== "單次") {
@@ -733,6 +785,36 @@
             document.getElementById("addTaskBtn").addEventListener("click", addTask);
             document.getElementById("taskInput").addEventListener("keypress", (e) => {
                 if (e.key === "Enter") addTask();
+            });
+
+            // 抽屜拉開與關閉控制事件
+            const toggleHeader = document.getElementById("chartToggleBtn");
+            const wrapper = document.getElementById("chartWrapper");
+            const arrow = document.getElementById("arrowIcon");
+
+            toggleHeader.addEventListener("click", () => {
+                if (wrapper.style.display === "flex") {
+                    wrapper.style.display = "none";
+                    arrow.className = "fas fa-chevron-down";
+                } else {
+                    wrapper.style.display = "flex";
+                    arrow.className = "fas fa-chevron-up";
+                    if (!myChart) {
+                        initChart(); // 展開時才第一次載入圖表
+                    } else {
+                        updateChart(); // 已載入過就更新數據
+                    }
+                }
+            });
+
+            // 切換 7D / 30D 時間範圍
+            document.querySelectorAll(".range-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    document.querySelectorAll(".range-btn").forEach(b => b.classList.remove("active"));
+                    e.currentTarget.classList.add("active");
+                    currentRange = parseInt(e.currentTarget.getAttribute("data-range"));
+                    updateChart();
+                });
             });
         }
 
@@ -783,35 +865,33 @@
             render();
         }
 
-        // 初始化圖表邏輯
+        // 動態生成圖表天數
         function initChart() {
             const ctx = document.getElementById('historyChart').getContext('2d');
-            const last7Days = [];
+            const labels = [];
             const chartData = [];
             
-            for (let i = 6; i >= 0; i--) {
+            for (let i = currentRange - 1; i >= 0; i--) {
                 const d = new Date();
                 d.setDate(d.getDate() - i);
                 const dateStr = d.toLocaleDateString();
-                // 顯示格式如 6/26
-                const showStr = `${d.getMonth()+1}/${d.getDate()}`;
-                last7Days.push(showStr);
+                labels.push(`${d.getMonth()+1}/${d.getDate()}`);
                 chartData.push(state.historyData[dateStr] || 0);
             }
 
             myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: last7Days,
+                    labels: labels,
                     datasets: [{
                         label: '縫製點子數',
                         data: chartData,
                         borderColor: '#f7a3a1',
-                        backgroundColor: 'rgba(247, 163, 161, 0.2)',
+                        backgroundColor: 'rgba(247, 163, 161, 0.1)',
                         borderWidth: 3,
                         tension: 0.3,
                         pointBackgroundColor: '#b56c4d',
-                        pointRadius: 4
+                        pointRadius: currentRange === 30 ? 2 : 4
                     }]
                 },
                 options: {
@@ -824,7 +904,7 @@
                             grid: { color: 'rgba(204, 164, 131, 0.1)' }
                         },
                         x: {
-                            ticks: { color: '#a69282' },
+                            ticks: { color: '#a69282', maxRotation: 45 },
                             grid: { display: false }
                         }
                     }
@@ -834,14 +914,20 @@
 
         function updateChart() {
             if (!myChart) return;
+            const labels = [];
             const chartData = [];
-            for (let i = 6; i >= 0; i--) {
+            
+            for (let i = currentRange - 1; i >= 0; i--) {
                 const d = new Date();
                 d.setDate(d.getDate() - i);
                 const dateStr = d.toLocaleDateString();
+                labels.push(`${d.getMonth()+1}/${d.getDate()}`);
                 chartData.push(state.historyData[dateStr] || 0);
             }
+            
+            myChart.data.labels = labels;
             myChart.data.datasets[0].data = chartData;
+            myChart.data.datasets[0].pointRadius = currentRange === 30 ? 2 : 4;
             myChart.update();
         }
 
@@ -884,13 +970,13 @@
         }
 
         function render() {
+            // 保留羽毛精心微調的徽章細分等級
             let lvlIcon = "🛡️"; 
             if (state.level > 3 && state.level <= 5) lvlIcon = "🪃";  
             if (state.level > 5 && state.level <= 7) lvlIcon = "🗡️"; 
             if (state.level > 7 && state.level <= 9) lvlIcon = "⚔️"; 
             if (state.level > 9 && state.level <= 10) lvlIcon = "🪄"; 
             if (state.level > 10) lvlIcon = "👑"; 
-            
 
             document.getElementById("levelDisplay").innerHTML = `${state.level}<span style="font-size:11px; font-weight:normal; margin-top:2px;">${lvlIcon}</span>`;
             
