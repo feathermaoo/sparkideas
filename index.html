@@ -397,6 +397,9 @@
         let tokenClient = null;
         let googleAccessToken = null;
         let isGapiLoaded = false;
+        let cloudSaveTimer = null;
+        let cloudSaveInProgress = false;
+        let cloudSavePending = false;
 
         const tagIcons = { "待辦任務": "fa-clipboard-list", "購物清單": "fa-shopping-bag", "想讀的書": "fa-book-open", "運動": "fa-dumbbell", "保險": "fa-shield-heart", "客戶": "fa-user-check" };
 
@@ -411,8 +414,7 @@
             
             // 👑 修正亮點：如果之前曾經成功過，強制維持在雲端同步視覺，拒絕被自動打回在地記憶體！
             if (localStorage.getItem("g_drive_token_active") === "true") {
-                setSyncUIMode(true, "syncing");
-                googleAccessToken = localStorage.getItem("g_drive_access_token");
+                setSyncUIMode(true, "reauth");
             }
         });
 
@@ -434,13 +436,12 @@
                         callback: async (resp) => {
                             if (resp.error) {
                                 console.error("授權回傳錯誤:", resp.error);
-                                setSyncUIMode(true, "error");
+                                clearGoogleToken();
+                                setSyncUIMode(false);
                                 return;
                             }
                             googleAccessToken = resp.access_token;
-                            localStorage.setItem("g_drive_access_token", googleAccessToken);
                             localStorage.setItem("g_drive_token_active", "true");
-                            setSyncUIMode(true);
                             // ⚡️ 核心修正：登入成功的當下，強制執行「下載並完全覆蓋本地」
                             await forceLoadFromGoogleDrive();
                         }
@@ -463,7 +464,7 @@
                 let res = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder', {
                     headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                 });
-                if (!res.ok) throw new Error(`雲端清單讀取失敗：${res.status}`);
+                await ensureGoogleResponseOk(res, "雲端清單讀取失敗");
                 let data = await res.json();
                 let file = data.files.find(f => f.name === 'spark_ideas_backup.json');
                 
@@ -471,7 +472,7 @@
                     let fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`, {
                         headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                     });
-                    if (!fileRes.ok) throw new Error(`雲端資料下載失敗：${fileRes.status}`);
+                    await ensureGoogleResponseOk(fileRes, "雲端資料下載失敗");
                     let cloudState = await fileRes.json();
                     
                     // ⚡️ 只要雲端有內容，直接無條件覆蓋本地的空白進度，達成手機、電腦完美同步！
@@ -488,7 +489,7 @@
                 setSyncUIMode(true, "synced");
             } catch (e) { 
                 console.error("安全下載失敗", e);
-                setSyncUIMode(true, "error");
+                handleSyncError(e);
             }
         }
 
@@ -510,14 +511,73 @@
                         icon: "fa-triangle-exclamation",
                         color: "#f7a3a1",
                         text: "雲端模式：同步失敗"
+                    },
+                    reauth: {
+                        icon: "fa-cloud",
+                        color: "#fcd59b",
+                        text: "雲端模式：請重新連動"
                     }
                 };
                 const currentStatus = statusMap[status] || statusMap.synced;
                 document.getElementById("syncIconText").innerHTML = `<i class="fas ${currentStatus.icon}" style="color:${currentStatus.color};"></i> ${currentStatus.text}`;
+                if (status === "reauth" || status === "error") {
+                    document.getElementById("gBtnText").innerText = "重新連動 Google";
+                }
             } else {
                 document.getElementById("gBtnText").innerText = "連動 Google 帳號";
                 document.getElementById("syncIconText").innerHTML = `<i class="fas fa-key"></i> 進度儲存：在地記憶體`;
             }
+        }
+
+        function clearGoogleToken() {
+            googleAccessToken = null;
+            localStorage.removeItem("g_drive_access_token");
+            localStorage.removeItem("g_drive_token_active");
+        }
+
+        async function ensureGoogleResponseOk(response, label) {
+            if (response.ok) return;
+            let detail = "";
+            try { detail = await response.text(); } catch (e) {}
+            const error = new Error(`${label}：${response.status} ${detail}`);
+            error.status = response.status;
+            error.detail = detail;
+            throw error;
+        }
+
+        function handleSyncError(error) {
+            if (error && (error.status === 401 || error.status === 403)) {
+                clearGoogleToken();
+                setSyncUIMode(true, "reauth");
+                showSyncTroubleshooting(error);
+                return;
+            }
+            setSyncUIMode(true, "error");
+            showSyncTroubleshooting(error);
+        }
+
+        function showSyncTroubleshooting(error) {
+            const message = String(error && error.message ? error.message : error || "未知錯誤");
+            const shortMessage = message.length > 180 ? message.slice(0, 180) + "..." : message;
+            const syncIconText = document.getElementById("syncIconText");
+            syncIconText.title = message;
+
+            if (message.includes("origin") || location.protocol === "file:") {
+                syncIconText.innerHTML += `<br><small style="font-size:10px;color:#b56c4d;">可能原因：目前用 file:// 開啟，Google OAuth/Drive 常會擋本機檔案來源。請改用 http://localhost 或部署網址。</small>`;
+                return;
+            }
+
+            if (error && error.status === 401) {
+                syncIconText.innerHTML += `<br><small style="font-size:10px;color:#b56c4d;">Google 授權已失效，請按右側重新連動。</small>`;
+                return;
+            }
+
+            if (error && error.status === 403) {
+                syncIconText.innerHTML += `<br><small style="font-size:10px;color:#b56c4d;">Google 拒絕存取。請檢查 Drive API 是否已啟用、OAuth 測試帳號是否包含你目前登入的帳號。</small>`;
+                return;
+            }
+
+            syncIconText.innerHTML += `<br><small style="font-size:10px;color:#b56c4d;">錯誤：${shortMessage}</small>`;
         }
 
         function handleAuthClick() {
@@ -535,7 +595,7 @@
                 let res = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder', {
                     headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                 });
-                if (!res.ok) throw new Error(`雲端清單讀取失敗：${res.status}`);
+                await ensureGoogleResponseOk(res, "雲端清單讀取失敗");
                 let data = await res.json();
                 let file = data.files.find(f => f.name === 'spark_ideas_backup.json');
                 
@@ -543,7 +603,7 @@
                     let fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`, {
                         headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                     });
-                    if (!fileRes.ok) throw new Error(`雲端資料下載失敗：${fileRes.status}`);
+                    await ensureGoogleResponseOk(fileRes, "雲端資料下載失敗");
                     let cloudState = await fileRes.json();
                     if (cloudState && (cloudState.completedCount >= state.completedCount || state.tasks.length === 0)) {
                         state = { ...state, ...cloudState };
@@ -558,14 +618,11 @@
                 setSyncUIMode(true, "synced");
             } catch (e) { 
                 console.error("雲端讀取錯誤", e);
-                setSyncUIMode(true, "error");
+                handleSyncError(e);
             }
         }
 
         async function saveToGoogleDrive() {
-            if (!googleAccessToken && localStorage.getItem("g_drive_token_active") === "true") {
-                googleAccessToken = localStorage.getItem("g_drive_access_token");
-            }
             if (!googleAccessToken) return;
 
             setSyncUIMode(true, "syncing");
@@ -573,7 +630,7 @@
                 let res = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder', {
                     headers: { 'Authorization': `Bearer ${googleAccessToken}` }
                 });
-                if (!res.ok) throw new Error(`雲端清單讀取失敗：${res.status}`);
+                await ensureGoogleResponseOk(res, "雲端清單讀取失敗");
                 let data = await res.json();
                 let file = data.files.find(f => f.name === 'spark_ideas_backup.json');
                 
@@ -599,12 +656,28 @@
                     headers: { 'Authorization': `Bearer ${googleAccessToken}`, 'Content-Type': `multipart/related; boundary=${boundary}` },
                     body: multipartRequestBody
                 });
-                if (!uploadRes.ok) throw new Error(`雲端儲存失敗：${uploadRes.status}`);
+                await ensureGoogleResponseOk(uploadRes, "雲端儲存失敗");
                 setSyncUIMode(true, "synced");
             } catch (e) {
                 console.error("雲端儲存錯誤", e);
-                setSyncUIMode(true, "error");
+                handleSyncError(e);
             }
+        }
+
+        function queueGoogleDriveSave() {
+            if (!googleAccessToken) return;
+            cloudSavePending = true;
+            clearTimeout(cloudSaveTimer);
+            cloudSaveTimer = setTimeout(processGoogleDriveSaveQueue, 600);
+        }
+
+        async function processGoogleDriveSaveQueue() {
+            if (cloudSaveInProgress || !cloudSavePending || !googleAccessToken) return;
+            cloudSavePending = false;
+            cloudSaveInProgress = true;
+            await saveToGoogleDrive();
+            cloudSaveInProgress = false;
+            if (cloudSavePending) processGoogleDriveSaveQueue();
         }
 
         function loadFromStorage() {
@@ -619,7 +692,7 @@
 
         function saveToStorage() {
             localStorage.setItem("quest_log_state", JSON.stringify(state));
-            saveToGoogleDrive(); 
+            queueGoogleDriveSave(); 
         }
 
         function renderSelectors() {
@@ -799,7 +872,7 @@
                     gainXP(-10); 
                     if (state.historyData[todayStr]) state.historyData[todayStr] = Math.max(0, state.historyData[todayStr] - 1);
                     if (state.historyDataV2[todayStr] && state.historyDataV2[todayStr][task.tag]) {
-                        state.historyDataV2[todayStr][task.tag] = Math.max(0, state.historyData[todayStr][task.tag] - 1);
+                        state.historyDataV2[todayStr][task.tag] = Math.max(0, state.historyDataV2[todayStr][task.tag] - 1);
                     }
                 }
                 saveToStorage();
@@ -936,4 +1009,3 @@
     </script>
 </body>
 </html>
-
