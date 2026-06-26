@@ -694,6 +694,7 @@
             autoUploadCloud();
         }
 
+        // 👑 修正重點 1：優化同步判定，如果是手機主動扣分，強迫雲端跟隨手機
         async function syncWithCloud() {
             let savedBinId = state.binId || localStorage.getItem("quest_log_cloud_bin_id");
 
@@ -713,13 +714,15 @@
                     const cloudData = await res.json();
                     const cloudState = cloudData.record;
                     
-                    if (cloudState && (cloudState.completedCount >= state.completedCount || state.tasks.length === 0)) {
+                    // 只有當雲端的完成數跟任務數同時大於等於本地時，才覆蓋（若本地剛刪除任務，任務總數會變少，此時不應該被雲端舊資料覆蓋）
+                    if (cloudState && cloudState.tasks && cloudState.tasks.length >= state.tasks.length && cloudState.completedCount > state.completedCount) {
                         state = { ...state, ...cloudState, binId: savedBinId };
                         localStorage.setItem("quest_log_state", JSON.stringify(state));
                         renderSelectors();
                         render();
                         if (myChart) updateChart();
                     } else {
+                        // 本地因為主動刪除任務而減少了，直接把這個最新權威狀態推給雲端
                         await uploadToCloud();
                     }
                 }
@@ -861,23 +864,20 @@
             }
         }
 
-        // 調整為支援負數扣回 XP，且防止等級變為負數
         function gainXP(amount) {
             state.xp += amount;
             
-            // 升級邏輯
             if (state.xp >= 100) {
                 state.xp -= 100;
                 state.level += 1;
                 alert(`🔮 成長大升級！恭喜你達到了 Lv.${state.level}！`);
             } 
-            // 降級邏輯（防止扣到變成負數 XP）
             else if (state.xp < 0) {
                 if (state.level > 1) {
                     state.level -= 1;
-                    state.xp = 100 + state.xp; // 倒扣回去前一級的經驗
+                    state.xp = 100 + state.xp; 
                 } else {
-                    state.xp = 0; // 最低就是 Lv.1 0 XP
+                    state.xp = 0; 
                 }
             }
             saveToStorage();
@@ -943,7 +943,7 @@
                 completed: false
             });
             input.value = "";
-            gainXP(2); // 新增拿到 2 XP
+            gainXP(2); 
         }
 
         function toggleTask(id) {
@@ -954,11 +954,11 @@
                 
                 if (task.completed) {
                     state.completedCount += 1;
-                    gainXP(10); // 完成拿到 10 XP
+                    gainXP(10); 
                     state.historyData[todayStr] = (state.historyData[todayStr] || 0) + 1;
                 } else {
                     state.completedCount = Math.max(0, state.completedCount - 1);
-                    gainXP(-10); // 取消完成扣回 10 XP
+                    gainXP(-10); 
                     if (state.historyData[todayStr]) {
                         state.historyData[todayStr] = Math.max(0, state.historyData[todayStr] - 1);
                     }
@@ -981,13 +981,12 @@
             }
         }
 
-        // 👑 依照羽毛指示，修正刪除任務扣回 XP 邏輯，防止洗經驗
+        // 👑 修正重點 2：在刪除的瞬間，立刻大吼通知雲端覆蓋，絕不留給舊資料復活的機會
         function deleteTask(id) {
             const taskToDelete = state.tasks.find(t => t.id === id);
             if (!taskToDelete) return;
 
             if (taskToDelete.completed) {
-                // 如果是已完成的任務被刪掉：扣回新增(2 XP)與過關(10 XP)共計 12 XP，且歷史紀錄減 1
                 gainXP(-12);
                 const todayStr = new Date().toLocaleDateString();
                 if (state.historyData[todayStr]) {
@@ -995,12 +994,15 @@
                 }
                 state.completedCount = Math.max(0, state.completedCount - 1);
             } else {
-                // 如果是未完成的任務被刪掉：直接扣回新增拿到的 2 XP
                 gainXP(-2);
             }
 
             state.tasks = state.tasks.filter(t => t.id !== id);
-            saveToStorage();
+            
+            // 這裡強制執行一次本地保存與雲端同步
+            localStorage.setItem("quest_log_state", JSON.stringify(state));
+            uploadToCloud(); // ➔ 略過防抖動計時器，直接覆蓋雲端！
+            
             render();
             updateChart();
         }
