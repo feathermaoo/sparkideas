@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght=500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -31,7 +31,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* 👑 核心修正：將字型萬能鎖綁在 body 與特定文字類別，讓 FontAwesome 的 .fas, .fab 圖示字型不被蓋掉，徹底根治方塊豆腐塊！ */
+        /* 強制防豆腐塊字型設定 */
         body, input, button, span, p, h1, div:not(.fas):not(.fab) {
             font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif !important;
         }
@@ -166,7 +166,7 @@
             color: #b56c4d;
         }
 
-        /* 完美大比例的裝備圖示（26px），強制排除圓體字型干擾 */
+        /* 大比例的裝備圖示（26px） */
         .lvl-icon-large {
             font-size: 26px !important; 
             margin-top: 1px;
@@ -408,6 +408,12 @@
             renderSelectors();
             renderChartSelectors();
             render();
+            
+            // 👑 修復亮點：如果之前曾經成功過，強制維持在雲端同步視覺，拒絕被自動打回在地記憶體！
+            if (localStorage.getItem("g_drive_token_active") === "true") {
+                setSyncUIMode(true);
+                googleAccessToken = localStorage.getItem("g_drive_access_token");
+            }
         });
 
         function onGapiLoad() {
@@ -426,20 +432,24 @@
                         client_id: CLIENT_ID,
                         scope: SCOPES,
                         callback: async (resp) => {
-                            if (resp.error) return;
+                            if (resp.error) {
+                                console.error("授權回傳錯誤:", resp.error);
+                                return;
+                            }
+                            // 👑 強制鎖定：拿到 token 立即深層寫入，拒絕反彈！
                             googleAccessToken = resp.access_token;
                             localStorage.setItem("g_drive_access_token", googleAccessToken);
+                            localStorage.setItem("g_drive_token_active", "true");
                             setSyncUIMode(true);
                             await loadFromGoogleDrive();
                         }
                     });
 
-                    const savedToken = localStorage.getItem("g_drive_token_active");
-                    if (savedToken === "true") {
-                        document.getElementById("gBtnText").innerText = "雲端讀取中...";
+                    // 背景自動默默握手
+                    if (localStorage.getItem("g_drive_token_active") === "true") {
                         setTimeout(() => {
                             tokenClient.requestAccessToken({ prompt: 'none' }); 
-                        }, 800);
+                        }, 500);
                     }
                 }
             } catch (e) { console.error("Google 初始化失敗", e); }
@@ -449,17 +459,15 @@
             if(isCloud) {
                 document.getElementById("gBtnText").innerText = "已連動雲端";
                 document.getElementById("syncIconText").innerHTML = `<i class="fas fa-cloud" style="color:#a8d3bb;"></i> 雲端模式：Google Drive 同步中`;
-                localStorage.setItem("g_drive_token_active", "true");
             } else {
                 document.getElementById("gBtnText").innerText = "連動 Google 帳號";
                 document.getElementById("syncIconText").innerHTML = `<i class="fas fa-key"></i> 進度儲存：在地記憶體`;
-                localStorage.setItem("g_drive_token_active", "false");
             }
         }
 
         function handleAuthClick() {
             if (!isGapiLoaded || !tokenClient) {
-                alert("Google 雲端元件正在載入中，請稍等一秒後再點擊一次喔！🧸");
+                alert("Google 雲端元件正在安全載入中，請稍等一秒後再點擊一次喔！🧸");
                 return;
             }
             tokenClient.requestAccessToken({ prompt: 'consent' });
@@ -491,12 +499,16 @@
                 }
             } catch (e) { 
                 console.error("雲端讀取錯誤", e);
-                setSyncUIMode(false);
             }
         }
 
         async function saveToGoogleDrive() {
+            // 補救防線：萬一 token 不見但開關開著，背景自動重新呼叫握手
+            if (!googleAccessToken && localStorage.getItem("g_drive_token_active") === "true") {
+                googleAccessToken = localStorage.getItem("g_drive_access_token");
+            }
             if (!googleAccessToken) return;
+
             try {
                 let res = await fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder', {
                     headers: { 'Authorization': `Bearer ${googleAccessToken}` }
@@ -659,6 +671,14 @@
         }
 
         function initEventListeners() {
+            document.querySelectorAll("#freqSelector .freq-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    document.querySelectorAll("#freqSelector .freq-btn").forEach(b => b.classList.remove("active"));
+                    e.currentTarget.classList.add("active");
+                    currentSelectedFreq = e.currentTarget.getAttribute("data-freq");
+                });
+            });
+
             document.getElementById("addTaskBtn").addEventListener("click", addTask);
             document.getElementById("taskInput").addEventListener("keypress", (e) => { if (e.key === "Enter") addTask(); });
 
