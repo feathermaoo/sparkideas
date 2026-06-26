@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>閃念點子冒險實驗錄</title>
-    <!-- 引入 FontAwesome 圖示 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 引入 Google 日系圓體字型 -->
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght=500;700&display=swap" rel="stylesheet">
-    <!-- 引入 Chart.js 用於繪製可愛圖表 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -30,7 +29,7 @@
             margin: 0;
             padding: 0;
             font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif;
-            -webkit-tap-highlight-color: transparent; /* 移除手機點擊藍色陰影 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -42,7 +41,6 @@
             align-items: flex-start;
             min-height: 100vh;
             overflow-y: auto;
-            /* 打造溫馨的手作格紋布或針織紋理背景 */
             background-image: linear-gradient(rgba(204, 164, 131, 0.05) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(204, 164, 131, 0.05) 1px, transparent 1px);
             background-size: 20px 20px;
@@ -120,7 +118,7 @@
         }
         .g-btn-style:hover { background-color: #fcf8f2; }
 
-        /* 經典拼布手作卡片（縫線滾邊效果） */
+        /* 經典拼布手作卡片 */
         .stitch-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
@@ -142,16 +140,16 @@
             background-color: var(--accent-yellow);
             border: 2px dashed #ffffff;
             color: #b56c4d;
-            width: 54px;
-            height: 54px;
+            width: 66px;
+            height: 66px;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-weight: bold;
-            font-size: 16px;
-            box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(166, 146, 130, 0.25);
             flex-shrink: 0;
         }
 
@@ -208,19 +206,8 @@
             border: 1px solid #ebdccb;
         }
 
-        .stat-icon { font-size: 16px; }
-        .stat-icon.fire { color: var(--accent-pink); }
-        .stat-icon.check { color: var(--accent-green); }
-
-        .stat-details div:first-child {
-            font-size: 15px;
-            font-weight: bold;
-        }
-
-        .stat-details div:last-child {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
+        .stat-details div:first-child { font-size: 15px; font-weight: bold; }
+        .stat-details div:last-child { font-size: 11px; color: var(--text-muted); }
 
         /* 輸入區塊 */
         .input-card {
@@ -235,231 +222,63 @@
             flex-shrink: 0;
         }
 
-        .input-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
+        .input-row { display: flex; gap: 8px; align-items: center; }
         .input-row input {
-            flex-grow: 1;
-            background-color: #faf6f0;
-            border: 2px solid #ebdccb;
-            border-radius: 14px;
-            padding: 10px 14px;
-            color: var(--text-main);
-            font-size: 14px;
-            outline: none;
-            transition: all 0.2s;
+            flex-grow: 1; background-color: #faf6f0; border: 2px solid #ebdccb;
+            border-radius: 14px; padding: 10px 14px; color: var(--text-main); font-size: 14px; outline: none;
         }
+        .input-row input:focus { border-color: var(--accent-pink); background-color: #ffffff; }
 
-        .input-row input:focus {
-            border-color: var(--accent-pink);
-            background-color: #ffffff;
-        }
-
-        /* 正方形加號按鈕 */
         .add-btn {
-            background-color: #e88d67;
-            border: 2px solid #ffffff;
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
-            transition: transform 0.1s;
-            flex-shrink: 0;
-        }
-        .add-btn:active { transform: scale(0.95); }
-
-        .tag-selector, .frequency-selector, .filter-row, .chart-filter-row {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            flex-shrink: 0;
+            background-color: #e88d67; border: 2px solid #ffffff; width: 44px; height: 44px; border-radius: 14px;
+            color: white; font-size: 18px; font-weight: bold; cursor: pointer; display: flex;
+            justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2); flex-shrink: 0;
         }
 
-        .tag-selector::-webkit-scrollbar, .frequency-selector::-webkit-scrollbar, .filter-row::-webkit-scrollbar, .chart-filter-row::-webkit-scrollbar {
-            display: none;
-        }
+        .tag-selector, .frequency-selector, .filter-row, .chart-filter-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; flex-shrink: 0; }
+        .tag-selector::-webkit-scrollbar, .frequency-selector::-webkit-scrollbar, .filter-row::-webkit-scrollbar, .chart-filter-row::-webkit-scrollbar { display: none; }
 
-        .section-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 1px;
-            margin-bottom: -4px;
-            font-weight: bold;
-        }
-
-        /* 布貼標籤樣式 */
         .tag-btn, .freq-btn, .filter-btn, .range-btn, .chart-tag-btn {
-            background-color: #faf6f0;
-            border: 1px dashed var(--stitch-color);
-            color: var(--text-main);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
+            background-color: #faf6f0; border: 1px dashed var(--stitch-color); color: var(--text-main);
+            padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px;
         }
 
         .tag-btn.active { background-color: var(--accent-pink); border-style: solid; border-color: #ffffff; color: white; }
         .freq-btn.active { background-color: var(--accent-green); border-style: solid; border-color: #ffffff; color: white; }
         .filter-btn.active { background-color: var(--accent-blue); border-style: solid; border-color: #ffffff; color: white; }
         .chart-tag-btn.active { background-color: var(--accent-purple); border-style: solid; border-color: #ffffff; color: white; }
+        .add-custom-tag-btn { background-color: transparent; border: 1px dashed #b56c4d; color: #b56c4d; padding: 5px 10px; }
 
-        .add-custom-tag-btn {
-            background-color: transparent;
-            border: 1px dashed #b56c4d;
-            color: #b56c4d;
-            padding: 5px 10px;
-        }
-
-        /* 任務列表 */
-        .task-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 320px;
-            overflow-y: auto;
-            padding-right: 2px;
-        }
-
-        .task-list::-webkit-scrollbar { width: 4px; }
-        .task-list::-webkit-scrollbar-thumb { background-color: rgba(204, 164, 131, 0.3); border-radius: 4px; }
-
-        .empty-state {
-            text-align: center;
-            padding: 35px 20px;
-            color: var(--text-muted);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            background: #ffffff;
-            border-radius: var(--border-radius);
-            border: 2px dashed #ebdccb;
-        }
-
-        .empty-icon { font-size: 40px; color: var(--accent-pink); }
-
+        .task-list { display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto; padding-right: 2px; }
         .task-item {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            box-shadow: 0 2px 8px rgba(166, 146, 130, 0.08);
-            border: 1px solid #f3ece4;
-            border-left: 5px solid var(--accent-pink);
-            animation: fadeIn 0.2s ease;
-            flex-shrink: 0;
+            background-color: var(--card-bg); border-radius: 16px; padding: 12px 14px; display: flex;
+            align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 2px 8px rgba(166, 146, 130, 0.08);
+            border: 1px solid #f3ece4; border-left: 5px solid var(--accent-pink); flex-shrink: 0;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .task-left { display: flex; align-items: center; gap: 12px; flex-grow: 1; cursor: pointer; }
-
-        .custom-checkbox {
-            width: 22px;
-            height: 22px;
-            border: 2px solid #cca483;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: transparent;
-            font-size: 11px;
-            background-color: #ffffff;
-            flex-shrink: 0;
-        }
-
+        .custom-checkbox { width: 22px; height: 22px; border: 2px solid #cca483; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: transparent; font-size: 11px; background-color: #ffffff; flex-shrink: 0; }
         .task-item.completed .custom-checkbox { background-color: var(--accent-green); border-color: var(--accent-green); color: white; }
-        
-        .task-content { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
-        
-        .task-text { font-size: 14px; font-weight: 500; word-break: break-all; transition: color 0.2s; }
-        .task-text:active { color: #b56c4d; }
         .task-item.completed .task-text { text-decoration: line-through; color: var(--text-muted); }
-
-        .task-badges { display: flex; gap: 6px; flex-wrap: wrap; }
-        .task-tag { font-size: 10px; color: #b56c4d; background-color: #f7ede2; padding: 2px 6px; border-radius: 4px; }
-        .task-freq { font-size: 10px; color: #e88d67; background-color: #fff3ed; padding: 2px 6px; border-radius: 4px; }
-
         .delete-btn { background: none; border: none; color: #ebdccb; cursor: pointer; font-size: 14px; padding: 6px; flex-shrink: 0; }
-        .delete-btn:hover { color: var(--accent-pink); }
 
-        /* 圖表抽屜 */
         .chart-toggle-header {
-            background-color: #ebdccb;
-            color: #b56c4d;
-            padding: 10px 16px;
-            border-radius: 14px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px dashed var(--stitch-color);
-            flex-shrink: 0;
-            margin-top: 2px;
+            background-color: #ebdccb; color: #b56c4d; padding: 10px 16px; border-radius: 14px; font-size: 13px; font-weight: bold;
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px dashed var(--stitch-color); margin-top: 2px;
         }
-
-        .chart-container-wrapper {
-            display: none;
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 14px;
-            box-shadow: 0 4px 12px rgba(166, 146, 130, 0.12);
-            border: 2px dashed var(--stitch-color);
-            flex-direction: column;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
+        .chart-container-wrapper { display: none; background-color: var(--card-bg); border-radius: var(--border-radius); padding: 14px; border: 2px dashed var(--stitch-color); flex-direction: column; gap: 10px; }
         .chart-controls { display: flex; justify-content: space-between; align-items: center; }
-        .range-selector-row { display: flex; gap: 6px; }
-        .range-btn { padding: 3px 10px; font-size: 11px; border-radius: 12px; }
 
-        /* 專屬簽名布標設計 */
-        .feather-footer {
-            text-align: center;
-            padding: 12px 0 6px 0;
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 2px;
-            font-weight: bold;
-            border-top: 1px dashed #ebdccb;
-            margin-top: 10px;
-        }
+        .feather-footer { text-align: center; padding: 12px 0 6px 0; font-size: 11px; color: var(--text-muted); letter-spacing: 2px; font-weight: bold; border-top: 1px dashed #ebdccb; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-teddy-bear"></i> 閃念點子冒險實錄</h1>
+            <h1><i class="fas fa-teddy-bear"></i> 閃念點子冒險實驗錄</h1>
             <p>縫製每一個閃念，織成最棒的自己 🧶</p>
         </div>
 
-        <!-- Google 自動雲端同步條 -->
         <div class="g-sync-banner">
             <span id="syncIconText"><i class="fas fa-key"></i> 進度儲存：在地記憶體</span>
             <button class="g-btn-style" id="gLoginBtn" onclick="handleAuthClick()">
@@ -483,17 +302,11 @@
             <div class="stats-grid">
                 <div class="stat-box">
                     <div class="stat-icon fire"><i class="fas fa-heart"></i></div>
-                    <div class="stat-details">
-                        <div id="streakDisplay">0</div>
-                        <div>連續記錄天數</div>
-                    </div>
+                    <div class="stat-details"><div id="streakDisplay">0</div><div>連續記錄天數</div></div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-icon check"><i class="fas fa-gift"></i></div>
-                    <div class="stat-details">
-                        <div id="completedCountDisplay">0</div>
-                        <div>已缝製點子</div>
-                    </div>
+                    <div class="stat-details"><div id="completedCountDisplay">0</div><div>已缝製點子</div></div>
                 </div>
             </div>
         </div>
@@ -503,10 +316,8 @@
                 <input type="text" id="taskInput" placeholder="捕捉到一個手寫念頭...">
                 <button class="add-btn" id="addTaskBtn"><i class="fas fa-plus"></i></button>
             </div>
-            
             <div class="section-label">🧵 選擇分類：</div>
             <div class="tag-selector" id="tagSelector"></div>
-
             <div class="section-label">🔄 重複頻率：</div>
             <div class="frequency-selector" id="freqSelector">
                 <button class="freq-btn active" data-freq="單次"><i class="fas fa-star"></i> 單次</button>
@@ -519,7 +330,6 @@
         <div class="filter-row" id="filterRow"></div>
         <div class="task-list" id="taskList"></div>
 
-        <!-- 歷程檢視 -->
         <div class="chart-toggle-header" id="chartToggleBtn">
             <span><i class="fas fa-chart-line"></i> 📊 查看冒險歷程圖表</span>
             <i class="fas fa-chevron-down" id="arrowIcon"></i>
@@ -537,13 +347,11 @@
             <canvas id="historyChart" style="max-height: 120px; width: 100%;"></canvas>
         </div>
 
-        <!-- 專屬簽名布標 -->
         <div class="feather-footer">
             🕊️ DESIGN BY FEATHERMAOO
         </div>
     </div>
 
-    <!-- 載入 Google 官方 API 腳本 -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://apis.google.com/js/api.js" onload="onGapiLoad()" async defer></script>
 
@@ -568,14 +376,7 @@
         let googleAccessToken = null;
         let isGapiLoaded = false;
 
-        const tagIcons = {
-            "待辦任務": "fa-clipboard-list",
-            "購物清單": "fa-shopping-bag",
-            "想讀的書": "fa-book-open",
-            "運動": "fa-dumbbell",
-            "保險": "fa-shield-heart",
-            "客戶": "fa-user-check"
-        };
+        const tagIcons = { "待辦任務": "fa-clipboard-list", "購物清單": "fa-shopping-bag", "想讀的書": "fa-book-open", "運動": "fa-dumbbell", "保險": "fa-shield-heart", "客戶": "fa-user-check" };
 
         document.addEventListener("DOMContentLoaded", () => {
             loadFromStorage();
@@ -605,13 +406,36 @@
                         callback: async (resp) => {
                             if (resp.error) return;
                             googleAccessToken = resp.access_token;
-                            document.getElementById("gBtnText").innerText = "已連動雲端";
-                            document.getElementById("syncIconText").innerHTML = `<i class="fas fa-cloud" style="color:#a8d3bb;"></i> 雲端模式：Google Drive 同步中`;
+                            // 👑 儲存 Token 到瀏覽器本地，以便下次開網頁自動登入
+                            localStorage.setItem("g_drive_access_token", googleAccessToken);
+                            setSyncUIMode(true);
                             await loadFromGoogleDrive();
                         }
                     });
+
+                    // 👑 修正重點 1：一開網頁自動檢查上一次是否登入過，如果有的話直接連動雲端硬碟檔案！
+                    const savedToken = localStorage.getItem("g_drive_token_active");
+                    if (savedToken === "true") {
+                        // 悄悄在背景申請新 token 或重用驗證
+                        document.getElementById("gBtnText").innerText = "雲端讀取中...";
+                        setTimeout(() => {
+                            tokenClient.requestAccessToken({ prompt: 'none' }); 
+                        }, 800);
+                    }
                 }
             } catch (e) { console.error("Google 初始化失敗", e); }
+        }
+
+        function setSyncUIMode(isCloud) {
+            if(isCloud) {
+                document.getElementById("gBtnText").innerText = "已連動雲端";
+                document.getElementById("syncIconText").innerHTML = `<i class="fas fa-cloud" style="color:#a8d3bb;"></i> 雲端模式：Google Drive 同步中`;
+                localStorage.setItem("g_drive_token_active", "true");
+            } else {
+                document.getElementById("gBtnText").innerText = "連動 Google 帳號";
+                document.getElementById("syncIconText").innerHTML = `<i class="fas fa-key"></i> 進度儲存：在地記憶體`;
+                localStorage.setItem("g_drive_token_active", "false");
+            }
         }
 
         function handleAuthClick() {
@@ -646,7 +470,11 @@
                         if (myChart) updateChart();
                     }
                 }
-            } catch (e) { console.error("雲端讀取錯誤", e); }
+            } catch (e) { 
+                console.error("雲端讀取錯誤", e);
+                // 如果 Token 過期失效了，自動洗掉儲存狀態
+                setSyncUIMode(false);
+            }
         }
 
         async function saveToGoogleDrive() {
@@ -664,13 +492,8 @@
                 let closeDelim = `\r\n--${boundary}--`;
                 
                 let multipartRequestBody =
-                    delimiter +
-                    'Content-Type: application/json\r\n\r\n' +
-                    JSON.stringify(metadata) +
-                    delimiter +
-                    'Content-Type: application/json\r\n\r\n' +
-                    JSON.stringify(state) +
-                    closeDelim;
+                    delimiter + 'Content-Type: application/json\r\n\r\n' + JSON.stringify(metadata) +
+                    delimiter + 'Content-Type: application/json\r\n\r\n' + JSON.stringify(state) + closeDelim;
 
                 let url = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
                 let method = 'POST';
@@ -682,10 +505,7 @@
 
                 await fetch(url, {
                     method: method,
-                    headers: {
-                        'Authorization': `Bearer ${googleAccessToken}`,
-                        'Content-Type': `multipart/related; boundary=${boundary}`
-                    },
+                    headers: { 'Authorization': `Bearer ${googleAccessToken}`, 'Content-Type': `multipart/related; boundary=${boundary}` },
                     body: multipartRequestBody
                 });
             } catch (e) { console.error("雲端儲存錯誤", e); }
@@ -821,14 +641,6 @@
         }
 
         function initEventListeners() {
-            document.querySelectorAll("#freqSelector .freq-btn").forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    document.querySelectorAll("#freqSelector .freq-btn").forEach(b => b.classList.remove("active"));
-                    e.currentTarget.classList.add("active");
-                    currentSelectedFreq = e.currentTarget.getAttribute("data-freq");
-                });
-            });
-
             document.getElementById("addTaskBtn").addEventListener("click", addTask);
             document.getElementById("taskInput").addEventListener("keypress", (e) => { if (e.key === "Enter") addTask(); });
 
@@ -859,7 +671,6 @@
             const input = document.getElementById("taskInput");
             const text = input.value.trim();
             if (!text) return;
-
             state.tasks.push({ id: Date.now(), text: text, tag: currentSelectedTag, freq: currentSelectedFreq, completed: false });
             input.value = "";
             checkStreak();
@@ -903,7 +714,6 @@
         function deleteTask(id) {
             const taskToDelete = state.tasks.find(t => t.id === id);
             if (!taskToDelete) return;
-
             if (taskToDelete.completed) {
                 gainXP(-12);
                 const todayStr = new Date().toLocaleDateString();
@@ -913,7 +723,6 @@
                 }
                 state.completedCount = Math.max(0, state.completedCount - 1);
             } else { gainXP(-2); }
-
             state.tasks = state.tasks.filter(t => t.id !== id);
             saveToStorage(); 
             render();
