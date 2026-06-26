@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>閃念任務簿 - 把每個念頭變成一場小冒險</title>
+    <!-- 引入 FontAwesome 圖示 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #120e24;
+            --card-bg: #1d1737;
+            --accent-gold: #ffd043;
+            --accent-purple: #7053ff;
+            --text-main: #ffffff;
+            --text-muted: #a39cb5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 標題區 */
+        .header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .header h1 {
+            color: var(--accent-gold);
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255, 208, 67, 0.3);
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* 狀態卡片 */
+        .status-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .level-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, #2a204e, #1d1737);
+            border: 2px solid var(--accent-gold);
+            color: var(--accent-gold);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 0 10px rgba(255, 208, 67, 0.2);
+        }
+
+        .level-badge span {
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .level-progress-container {
+            flex-grow: 1;
+        }
+
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .current-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .xp-text {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-bg {
+            background-color: #120e24;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--accent-purple), #9d85ff);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 8px rgba(112, 83, 255, 0.5);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-box {
+            background-color: rgba(18, 14, 36, 0.6);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-icon {
+            font-size: 20px;
+        }
+
+        .stat-icon.fire { color: #ff5b5b; }
+        .stat-icon.check { color: #2cdbb3; }
+
+        .stat-details div:first-child {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .stat-details div:last-child {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* 輸入區塊 */
+        .input-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-row input {
+            flex-grow: 1;
+            background-color: #120e24;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-row input:focus {
+            border-color: var(--accent-purple);
+        }
+
+        .add-btn {
+            background-color: var(--accent-gold);
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            color: #120e24;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.1s;
+        }
+
+        .add-btn:active {
+            transform: scale(0.95);
+        }
+
+        .tag-selector {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .tag-selector::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tag-btn {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag-btn.active {
+            background-color: rgba(112, 83, 255, 0.2);
+            border-color: var(--accent-purple);
+            color: white;
+        }
+
+        /* 篩選過濾器 */
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+
+        .filter-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .filter-btn.active {
+            background-color: var(--accent-purple);
+            color: white;
+            border-color: var(--accent-purple);
+        }
+
+        /* 任務列表 */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        .task-item {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        .checkbox-wrapper {
+            cursor: pointer;
+        }
+
+        .custom-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: transparent;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .task-item.completed .custom-checkbox {
+            background-color: #2cdbb3;
+            border-color: #2cdbb3;
+            color: #120e24;
+        }
+
+        .task-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .task-text {
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .task-tag {
+            font-size: 11px;
+            color: var(--accent-purple);
+            background-color: rgba(112, 83, 255, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            width: fit-content;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .delete-btn:hover {
+            color: #ff5b5b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 標題 -->
+        <div class="header">
+            <h1>閃念任務簿</h1>
+            <p>把每個念頭，變成一場小冒險</p>
+        </div>
+
+        <!-- 狀態看板 -->
+        <div class="status-card">
+            <div class="level-info">
+                <div class="level-badge" id="levelDisplay">1<span>Lv</span></div>
+                <div class="level-progress-container">
+                    <div class="title-row">
+                        <span class="current-title" id="titleDisplay">迷途夢想家</span>
+                        <span class="xp-text" id="xpText">0 / 100 XP</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressBar"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-icon fire"><i class="fas fa-fire"></i></div>
+                    <div class="stat-details">
+                        <div id="streakDisplay">0</div>
+                        <div>連續天數</div>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon check"><i class="fas fa-circle-check"></i></div>
+                    <div class="stat-details">
+                        <div id="completedCountDisplay">0</div>
+                        <div>已完成任務</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 輸入框區塊 -->
+        <div class="input-card">
+            <div class="input-row">
+                <input type="text" id="taskInput" placeholder="浮現一個念頭...">
+                <button class="add-btn" id="addTaskBtn"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="tag-selector" id="tagSelector">
+                <button class="tag-btn active" data-tag="待辦任務"><i class="fas fa-sword"></i> 待辦任務</button>
+                <button class="tag-btn" data-tag="購物清單"><i class="fas fa-shopping-bag"></i> 購物清單</button>
+                <button class="tag-btn" data-tag="想讀的書"><i class="fas fa-book-open"></i> 想讀的書</button>
+            </div>
+        </div>
+
+        <!-- 分類篩選列 -->
+        <div class="filter-row">
+            <button class="filter-btn active" data-filter="全部">✨ 全部 <span id="count-全部">0</span></button>
+            <button class="filter-btn" data-filter="待辦任務">⚔️ 待辦任務 <span id="count-待辦任務">0</span></button>
+            <button class="filter-btn" data-filter="購物清單">🛍️ 購物清單 <span id="count-購物清單">0</span></button>
+            <button class="filter-btn" data-filter="想讀的書">📖 想讀的書 <span id="count-想讀的書">0</span></button>
+        </div>
+
+        <!-- 任務清單呈現 -->
+        <div class="task-list" id="taskList">
+            <!-- 由 JavaScript 動態渲染 -->
+        </div>
+    </div>
+
+    <script>
+        // 初始化數據模型
+        let state = {
+            level: 1,
+            xp: 0,
+            streak: 0,
+            completedCount: 0,
+            tasks: [],
+            lastActiveDate: ""
+        };
+
+        // 稱號清單
+        const titles = ["迷途夢想家", "見習冒險者", "任務騎士", "念頭掌控者", "行動傳奇"];
+        let currentSelectedTag = "待辦任務";
+        let currentFilter = "全部";
+
+        // DOM 元素載入
+        document.addEventListener("DOMContentLoaded", () => {
+            loadFromStorage();
+            checkStreak();
+            initEventListeners();
+            render();
+        });
+
+        // 讀取本地儲存 (修復原本格式錯誤)
+        function loadFromStorage() {
+            try {
+                const savedState = localStorage.getItem("quest_log_state");
+                if (savedState) {
+                    state = JSON.parse(savedState);
+                    // 確保必要欄位存在
+                    if (!state.tasks) state.tasks = [];
+                    if (state.level === undefined) state.level = 1;
+                }
+            } catch (e) {
+                console.error("讀取儲存失敗，正在初始化全新狀態", e);
+            }
+        }
+
+        // 儲存資料
+        function saveToStorage() {
+            localStorage.setItem("quest_log_state", JSON.stringify(state));
+        }
+
+        // 檢查連續天數邏輯
+        function checkStreak() {
+            const today = new Date().toLocaleDateString();
+            if (state.lastActiveDate) {
+                const lastDate = new Date(state.lastActiveDate);
+                const todayDate = new Date(today);
+                const diffTime = Math.abs(todayDate - lastDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 1) {
+                    state.streak += 1;
+                } else if (diffDays > 1) {
+                    state.streak = 1; // 中斷後重置
+                }
+            } else {
+                state.streak = 1; // 第一次使用
+            }
+            state.lastActiveDate = today;
+            saveToStorage();
+        }
+
+        // 經驗值增加與升級算法
+        function gainXP(amount) {
+            state.xp += amount;
+            if (state.xp >= 100) {
+                state.xp -= 100;
+                state.level += 1;
+                alert(`🎉 恭喜升級！你已經達到了等級 ${state.level}！`);
+            }
+            saveToStorage();
+            render();
+        }
+
+        // 事件監聽初始化
+        function initEventListeners() {
+            // 標籤選擇
+            document.querySelectorAll("#tagSelector .tag-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    document.querySelectorAll("#tagSelector .tag-btn").forEach(b => b.classList.remove("active"));
+                    const target = e.currentTarget;
+                    target.classList.add("active");
+                    currentSelectedTag = target.getAttribute("data-tag");
+                });
+            });
+
+            // 分類篩選
+            document.querySelectorAll(".filter-row .filter-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    document.querySelectorAll(".filter-row .filter-btn").forEach(b => b.classList.remove("active"));
+                    const target = e.currentTarget;
+                    target.classList.add("active");
+                    currentFilter = target.getAttribute("data-filter");
+                    render();
+                });
+            });
+
+            // 新增按鈕與 Enter 鍵
+            document.getElementById("addTaskBtn").addEventListener("click", addTask);
+            document.getElementById("taskInput").addEventListener("keypress", (e) => {
+                if (e.key === "Enter") addTask();
+            });
+        }
+
+        // 新增點子任務
+        function addTask() {
+            const input = document.getElementById("taskInput");
+            const text = input.value.trim();
+            if (!text) return;
+
+            const newTask = {
+                id: Date.now(),
+                text: text,
+                tag: currentSelectedTag,
+                completed: false
+            };
+
+            state.tasks.push(newTask);
+            input.value = "";
+            
+            // 新增一個念頭獲得 10 點經驗值！
+            gainXP(10);
+            render();
+        }
+
+        // 切換任務完成狀態
+        function toggleTask(id) {
+            const task = state.tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                if (task.completed) {
+                    state.completedCount += 1;
+                    gainXP(25); // 完成一項冒險任務獲得 25 點超多經驗值！
+                } else {
+                    state.completedCount = Math.max(0, state.completedCount - 1);
+                    state.xp = Math.max(0, state.xp - 25);
+                }
+                saveToStorage();
+                render();
+            }
+        }
+
+        // 刪除任務
+        function deleteTask(id) {
+            state.tasks = state.tasks.filter(t => t.id !== id);
+            saveToStorage();
+            render();
+        }
+
+        // 計算各分類數量
+        function updateCounters() {
+            const counts = { "全部": state.tasks.length, "待辦任務": 0, "購物清單": 0, "想讀的書": 0 };
+            state.tasks.forEach(t => {
+                if (counts[t.tag] !== undefined) counts[t.tag]++;
+            });
+
+            Object.keys(counts).forEach(key => {
+                const el = document.getElementById(`count-${key}`);
+                if (el) el.innerText = counts[key];
+            });
+        }
+
+        // 畫面完整渲染
+        function render() {
+            // 更新看板數據
+            document.getElementById("levelDisplay").innerHTML = `${state.level}<span>Lv</span>`;
+            const titleIndex = Math.min(Math.floor((state.level - 1) / 3), titles.length - 1);
+            document.getElementById("titleDisplay").innerText = titles[titleIndex];
+            document.getElementById("xpText").innerText = `${state.xp} / 100 XP`;
+            document.getElementById("progressBar").style.width = `${state.xp}%`;
+            document.getElementById("streakDisplay").innerText = state.streak;
+            document.getElementById("completedCountDisplay").innerText = state.completedCount;
+
+            updateCounters();
+
+            // 渲染任務清單
+            const listContainer = document.getElementById("taskList");
+            listContainer.innerHTML = "";
+
+            const filteredTasks = state.tasks.filter(t => currentFilter === "全部" || t.tag === currentFilter);
+
+            if (filteredTasks.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="feather-icon fas fa-leaf"></i></div>
+                        <p>還沒有任務在這裡。<br>新增一個閃念，開始你的冒險吧！</p>
+                    </div>`;
+                return;
+            }
+
+            filteredTasks.forEach(task => {
+                const item = document.createElement("div");
+                item.className = `task-item ${task.completed ? 'completed' : ''}`;
+                item.innerHTML = `
+                    <div class="task-left" onclick="toggleTask(${task.id})">
+                        <div class="checkbox-wrapper">
+                            <div class="custom-checkbox">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                        <div class="task-content">
+                            <span class="task-text">${task.text}</span>
+                            <span class="task-tag">${task.tag}</span>
+                        </div>
+                    </div>
+                    <button class="delete-btn" onclick="event.stopPropagation(); deleteTask(${task.id})">
+                        <i class="fas fa-trash-can"></i>
+                    </button>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>
