@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>閃念點子冒險實驗錄</title>
-    <!-- 引入 FontAwesome 圖示 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 引入 Google 日系圓體字型核心連結 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght=500;700&display=swap" rel="stylesheet">
-    <!-- 引入 Chart.js 用於繪製可愛圖表 -->
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -27,11 +24,12 @@
             --border-radius: 20px;
         }
 
-        * {
+        /* 👑 雙重保險 1：強制所有網頁標籤，甚至包含動態生成的內容都必須使用可愛圓體 */
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif;
+            font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif !important;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -139,7 +137,7 @@
             margin-bottom: 12px;
         }
 
-        /* 👑 修正焦點：維持好看的鈕扣圓圈比例，專注內部舒適排版 */
+        /* 👑 鈕扣比例回復到好看的 70px 外觀 */
         .level-badge {
             background-color: var(--accent-yellow);
             border: 2px dashed #ffffff;
@@ -157,16 +155,17 @@
             padding-top: 2px;
         }
 
-        /* 👑 LV.數字的文字樣式 */
+        /* 👑 雙重保險 2：確保動態產生的 LV.字樣也是圓體，大小剛好不擠壓 */
         .lvl-text-num {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 700;
             letter-spacing: 0.5px;
+            color: #b56c4d;
         }
 
-        /* 👑 解放下方圖示！單獨將盾牌、武器圖示放大 2.5 倍，達到震撼視覺比例 */
+        /* 👑 完美放大 2.5 倍的盾牌與冒險裝備圖示（26px） */
         .lvl-icon-large {
-            font-size: 26px; /* 從芝麻大直接放大到 26px */
+            font-size: 26px !important; 
             margin-top: 1px;
             display: inline-block;
         }
@@ -293,11 +292,10 @@
 
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-teddy-bear"></i> 閃念點子冒險實錄</h1>
-            <p>縫製每一個閃念，編織成最棒的自己 🧶</p>
+            <h1><i class="fas fa-teddy-bear"></i> 閃念點子冒險實驗錄</h1>
+            <p>縫製每一個閃念，織成最棒的自己 🧶</p>
         </div>
 
-        <!-- Google 自動雲端同步條 -->
         <div class="g-sync-banner">
             <span id="syncIconText"><i class="fas fa-key"></i> 進度儲存：在地記憶體</span>
             <button class="g-btn-style" id="gLoginBtn" onclick="handleAuthClick()">
@@ -307,7 +305,6 @@
 
         <div class="stitch-card">
             <div class="level-info">
-                <!-- 👑 等級徽章 -->
                 <div class="level-badge" id="levelDisplay"></div>
                 <div class="level-progress-container">
                     <div class="title-row">
@@ -372,7 +369,6 @@
         </div>
     </div>
 
-    <!-- 載入 Google 官方 API 腳本 -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://apis.google.com/js/api.js" onload="onGapiLoad()" async defer></script>
 
@@ -729,7 +725,7 @@
         }
 
         function deleteTask(id) {
-            const taskToDelete = state.tasks.find(t => t.id === id);
+            const taskToDelete = state.tasks.find(t => t.id !== id);
             if (!taskToDelete) return;
             if (taskToDelete.completed) {
                 gainXP(-12);
@@ -803,7 +799,7 @@
             if (state.level > 7 && state.level <= 9) lvlIcon = "⚔️"; if (state.level > 9 && state.level <= 10) lvlIcon = "🪄"; 
             if (state.level > 10) lvlIcon = "👑"; 
 
-            // 👑 修正重點：加上 LV. 字樣，並將下面的圖示獨立掛上大圖示 class
+            // 👑 修正核心：文字和圖示內嵌排版，外加 CSS 萬能鎖強制鎖定圓體
             document.getElementById("levelDisplay").innerHTML = `
                 <div class="lvl-text-num">LV. ${state.level}</div>
                 <div class="lvl-icon-large">${lvlIcon}</div>
