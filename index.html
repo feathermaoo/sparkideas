@@ -634,7 +634,9 @@
                 let data = await res.json();
                 let file = data.files.find(f => f.name === 'spark_ideas_backup.json');
                 
-                let metadata = { name: 'spark_ideas_backup.json', parents: ['appDataFolder'] };
+                let metadata = file
+                    ? { name: 'spark_ideas_backup.json' }
+                    : { name: 'spark_ideas_backup.json', parents: ['appDataFolder'] };
                 let boundary = 'foo_bar_baz';
                 let delimiter = `\r\n--${boundary}\r\n`;
                 let closeDelim = `\r\n--${boundary}--`;
