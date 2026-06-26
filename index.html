@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>閃念任務簿 - 點子冒險</title>
-    <!-- 引入 FontAwesome 圖示 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 引入 Google 日系圓體字型 -->
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
-    <!-- 引入 Chart.js 用於繪製可愛圖表 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -229,25 +226,23 @@
             background-color: #ffffff;
         }
 
-        /* 超顯眼大按鈕 */
+        /* 👑 修正後：超完美不卡邊 正方形大按鈕 */
         .add-btn {
             background-color: #e88d67;
             border: 2px solid #ffffff;
-            width: 75px;
-            height: 42px;
+            width: 44px; /* 固定正方形寬度 */
+            height: 44px; /* 固定正方形高度 */
             border-radius: 14px;
             color: white;
-            font-size: 13px;
+            font-size: 18px; /* 讓加號變明顯 */
             font-weight: bold;
             cursor: pointer;
             display: flex;
-            flex-direction: row;
             justify-content: center;
             align-items: center;
-            gap: 5px;
             box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
             transition: transform 0.1s;
-            flex-shrink: 0;
+            flex-shrink: 0; /* 強制不被壓縮擠扁 */
         }
 
         .add-btn:active { transform: scale(0.95); }
@@ -302,10 +297,12 @@
             color: white;
         }
 
+        /* 👑 修正後：精簡分類按鈕 */
         .add-custom-tag-btn {
             background-color: transparent;
             border: 1px dashed #b56c4d;
             color: #b56c4d;
+            padding: 5px 10px;
         }
 
         /* 下方篩選列布貼 */
@@ -589,7 +586,7 @@
         <div class="input-card">
             <div class="input-row">
                 <input type="text" id="taskInput" placeholder="捕捉到一個手寫念頭...">
-                <button class="add-btn" id="addTaskBtn"><i class="fas fa-pencil-alt"></i>新增</button>
+                <button class="add-btn" id="addTaskBtn"><i class="fas fa-plus"></i></button>
             </div>
             
             <div class="section-label">🧵 選擇分類：</div>
@@ -606,16 +603,13 @@
 
         <div class="filter-row" id="filterRow"></div>
 
-        <!-- 可滑動任務清單 -->
         <div class="task-list" id="taskList"></div>
 
-        <!-- 歷程檢視抽屜按鈕 -->
         <div class="chart-toggle-header" id="chartToggleBtn">
             <span><i class="fas fa-chart-line"></i> 📊 查看冒險歷程圖表</span>
             <i class="fas fa-chevron-down" id="arrowIcon"></i>
         </div>
 
-        <!-- 隱藏的圖表抽屜內容 -->
         <div class="chart-container-wrapper" id="chartWrapper">
             <div class="chart-controls">
                 <span style="font-size: 12px; font-weight: bold; color: #b56c4d;">🧶 縫製能量歷史紀錄</span>
@@ -697,7 +691,8 @@
                 const iconClass = tagIcons[tag] || "fa-tag"; 
                 tagSelector.innerHTML += `<button class="tag-btn ${isActive}" data-tag="${tag}"><i class="fas ${iconClass}"></i> ${tag}</button>`;
             });
-            tagSelector.innerHTML += `<button class="tag-btn add-custom-tag-btn" id="addCustomTagBtn"><i class="fas fa-plus"></i> 新增分類</button>`;
+            // 👑 這裡的新增按鈕也縮短成 + 分類
+            tagSelector.innerHTML += `<button class="tag-btn add-custom-tag-btn" id="addCustomTagBtn"><i class="fas fa-plus"></i> 分類</button>`;
 
             const filterRow = document.getElementById("filterRow");
             filterRow.innerHTML = `<button class="filter-btn ${currentFilter === '全部' ? 'active' : ''}" data-filter="全部">✨ 全部 <span id="count-全部">0</span></button>`;
