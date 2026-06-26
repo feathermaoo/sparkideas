@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>閃念任務簿 - 把每個念頭變成一場小冒險</title>
-    <!-- 引入 FontAwesome 圖示 -->
+    <title>閃念精靈任務簿 - 療癒系大腦冒險</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #120e24;
-            --card-bg: #1d1737;
-            --accent-gold: #ffd043;
-            --accent-purple: #7053ff;
-            --text-main: #ffffff;
-            --text-muted: #a39cb5;
+            --bg-color: #f4f6fb;
+            --card-bg: #ffffff;
+            --accent-pink: #ffb7b2;
+            --accent-green: #e2f0cb;
+            --accent-yellow: #ffdac1;
+            --accent-blue: #b5ead7;
+            --accent-purple: #c7ceea;
+            --text-main: #5d576b;
+            --text-muted: #9a94a6;
+            --border-radius: 24px;
         }
 
         * {
@@ -31,6 +34,10 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            background-image: radial-gradient(rgba(226, 240, 203, 0.4) 15%, transparent 16%),
+                              radial-gradient(rgba(255, 183, 178, 0.3) 15%, transparent 16%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
         }
 
         .container {
@@ -45,15 +52,24 @@
         .header {
             text-align: center;
             margin-bottom: 5px;
+            position: relative;
         }
 
         .header h1 {
-            color: var(--accent-gold);
+            color: #7b68ee;
             font-size: 28px;
             font-weight: bold;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(255, 208, 67, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 i {
+            color: var(--accent-pink);
+            animation: float 2s ease-in-out infinite;
         }
 
         .header p {
@@ -61,13 +77,19 @@
             font-size: 14px;
         }
 
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
         /* 狀態卡片 */
         .status-card {
             background-color: var(--card-bg);
-            border-radius: 20px;
+            border-radius: var(--border-radius);
             padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(199, 206, 234, 0.3);
+            border: 2px solid #ffffff;
         }
 
         .level-info {
@@ -78,23 +100,23 @@
         }
 
         .level-badge {
-            background: linear-gradient(135deg, #2a204e, #1d1737);
-            border: 2px solid var(--accent-gold);
-            color: var(--accent-gold);
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-yellow));
+            color: #ffffff;
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-weight: bold;
-            font-size: 18px;
-            box-shadow: 0 0 10px rgba(255, 208, 67, 0.2);
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(255, 183, 178, 0.4);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         .level-badge span {
-            font-size: 10px;
+            font-size: 9px;
             text-transform: uppercase;
         }
 
@@ -112,6 +134,7 @@
         .current-title {
             font-size: 16px;
             font-weight: bold;
+            color: #7b68ee;
         }
 
         .xp-text {
@@ -120,19 +143,18 @@
         }
 
         .progress-bar-bg {
-            background-color: #120e24;
-            height: 8px;
-            border-radius: 4px;
+            background-color: #f0edf5;
+            height: 10px;
+            border-radius: 5px;
             overflow: hidden;
             width: 100%;
         }
 
         .progress-bar-fill {
-            background: linear-gradient(90deg, var(--accent-purple), #9d85ff);
+            background: linear-gradient(90deg, #b5ead7, #c7ceea);
             height: 100%;
             width: 0%;
             transition: width 0.4s ease;
-            box-shadow: 0 0 8px rgba(112, 83, 255, 0.5);
         }
 
         .stats-grid {
@@ -142,24 +164,25 @@
         }
 
         .stat-box {
-            background-color: rgba(18, 14, 36, 0.6);
-            border-radius: 12px;
+            background-color: #fbfaff;
+            border-radius: 16px;
             padding: 12px;
             display: flex;
             align-items: center;
             gap: 12px;
+            border: 1px dashed var(--accent-purple);
         }
 
         .stat-icon {
             font-size: 20px;
         }
-
-        .stat-icon.fire { color: #ff5b5b; }
-        .stat-icon.check { color: #2cdbb3; }
+        .stat-icon.fire { color: #ffb7b2; }
+        .stat-icon.check { color: #b5ead7; }
 
         .stat-details div:first-child {
             font-size: 18px;
             font-weight: bold;
+            color: var(--text-main);
         }
 
         .stat-details div:last-child {
@@ -170,8 +193,10 @@
         /* 輸入區塊 */
         .input-card {
             background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 16px;
+            border-radius: var(--border-radius);
+            padding: 18px;
+            box-shadow: 0 8px 20px rgba(199, 206, 234, 0.3);
+            border: 2px solid #ffffff;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -184,53 +209,61 @@
 
         .input-row input {
             flex-grow: 1;
-            background-color: #120e24;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            background-color: #f7f6fb;
+            border: 1px solid #e1dfeb;
+            border-radius: 16px;
             padding: 12px 16px;
-            color: white;
+            color: var(--text-main);
             font-size: 15px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
         .input-row input:focus {
-            border-color: var(--accent-purple);
+            border-color: #c7ceea;
+            background-color: #ffffff;
+            box-shadow: 0 0 8px rgba(199, 206, 234, 0.5);
         }
 
         .add-btn {
-            background-color: var(--accent-gold);
+            background: linear-gradient(135deg, #c7ceea, #b5ead7);
             border: none;
             width: 48px;
             height: 48px;
-            border-radius: 12px;
-            color: #120e24;
-            font-size: 20px;
+            border-radius: 16px;
+            color: white;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
+            box-shadow: 0 4px 10px rgba(199, 206, 234, 0.4);
             transition: transform 0.1s;
         }
 
-        .add-btn:active {
-            transform: scale(0.95);
-        }
+        .add-btn:active { transform: scale(0.95); }
 
-        .tag-selector {
+        .tag-selector, .frequency-selector, .filter-row {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding-bottom: 4px;
+            padding-bottom: 6px;
         }
 
-        .tag-selector::-webkit-scrollbar {
+        .tag-selector::-webkit-scrollbar, .frequency-selector::-webkit-scrollbar, .filter-row::-webkit-scrollbar {
             display: none;
         }
 
-        .tag-btn {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .section-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            margin-bottom: -4px;
+        }
+
+        .tag-btn, .freq-btn, .filter-btn {
+            background-color: #f7f6fb;
+            border: 1px solid #f7f6fb;
             color: var(--text-muted);
             padding: 6px 14px;
             border-radius: 20px;
@@ -240,41 +273,37 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            transition: all 0.2s;
         }
 
         .tag-btn.active {
-            background-color: rgba(112, 83, 255, 0.2);
-            border-color: var(--accent-purple);
+            background-color: #ffb7b2;
+            border-color: #ffb7b2;
             color: white;
         }
 
-        /* 篩選過濾器 */
-        .filter-row {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 2px;
+        .freq-btn.active {
+            background-color: #b5ead7;
+            border-color: #b5ead7;
+            color: white;
         }
 
-        .filter-row::-webkit-scrollbar {
-            display: none;
+        .add-custom-tag-btn {
+            background-color: transparent;
+            border: 1px dashed #7b68ee;
+            color: #7b68ee;
         }
 
+        /* 篩選列 */
         .filter-btn {
             background-color: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(199, 206, 234, 0.15);
         }
 
         .filter-btn.active {
-            background-color: var(--accent-purple);
+            background-color: #c7ceea;
             color: white;
-            border-color: var(--accent-purple);
+            border-color: #c7ceea;
         }
 
         /* 任務列表 */
@@ -295,18 +324,21 @@
         }
 
         .empty-icon {
-            font-size: 40px;
-            color: rgba(255, 255, 255, 0.1);
+            font-size: 44px;
+            color: var(--accent-pink);
+            animation: float 2.5s ease-in-out infinite;
         }
 
         .task-item {
             background-color: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 14px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            box-shadow: 0 4px 12px rgba(199, 206, 234, 0.15);
+            border: 1px solid #ffffff;
             animation: fadeIn 0.3s ease;
         }
 
@@ -320,29 +352,27 @@
             align-items: center;
             gap: 12px;
             flex-grow: 1;
-        }
-
-        .checkbox-wrapper {
             cursor: pointer;
         }
 
         .custom-checkbox {
             width: 22px;
             height: 22px;
-            border: 2px solid var(--text-muted);
-            border-radius: 6px;
+            border: 2px solid #dcd9e8;
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
             color: transparent;
             font-size: 12px;
             transition: all 0.2s;
+            background-color: #ffffff;
         }
 
         .task-item.completed .custom-checkbox {
-            background-color: #2cdbb3;
-            border-color: #2cdbb3;
-            color: #120e24;
+            background-color: #b5ead7;
+            border-color: #b5ead7;
+            color: white;
         }
 
         .task-content {
@@ -353,7 +383,7 @@
 
         .task-text {
             font-size: 15px;
-            transition: all 0.2s;
+            color: var(--text-main);
         }
 
         .task-item.completed .task-text {
@@ -361,40 +391,69 @@
             color: var(--text-muted);
         }
 
+        .task-badges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
         .task-tag {
-            font-size: 11px;
-            color: var(--accent-purple);
-            background-color: rgba(112, 83, 255, 0.15);
+            font-size: 10px;
+            color: #7b68ee;
+            background-color: #f0edf5;
             padding: 2px 8px;
-            border-radius: 4px;
-            width: fit-content;
+            border-radius: 6px;
+        }
+
+        .task-freq {
+            font-size: 10px;
+            color: #ff7b7b;
+            background-color: #fff0f0;
+            padding: 2px 8px;
+            border-radius: 6px;
         }
 
         .delete-btn {
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.2);
+            color: #dcd9e8;
             cursor: pointer;
             font-size: 16px;
             padding: 4px;
             transition: color 0.2s;
         }
 
-        .delete-btn:hover {
-            color: #ff5b5b;
+        .delete-btn:hover { color: #ffb7b2; }
+
+        /* 備份按鈕區區塊 */
+        .backup-section {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
         }
+
+        .backup-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .backup-btn:hover { color: #7b68ee; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- 標題 -->
         <div class="header">
-            <h1>閃念任務簿</h1>
-            <p>把每個念頭，變成一場小冒險</p>
+            <h1><i class="fas fa-fairy"></i> 閃念精靈任務簿</h1>
+            <p>與小精靈一起，把念頭變成美麗的冒險 ✨</p>
         </div>
 
-        <!-- 狀態看板 -->
         <div class="status-card">
             <div class="level-info">
                 <div class="level-badge" id="levelDisplay">1<span>Lv</span></div>
@@ -410,185 +469,228 @@
             </div>
             <div class="stats-grid">
                 <div class="stat-box">
-                    <div class="stat-icon fire"><i class="fas fa-fire"></i></div>
+                    <div class="stat-icon fire"><i class="fas fa-wand-magic-sparkles"></i></div>
                     <div class="stat-details">
                         <div id="streakDisplay">0</div>
-                        <div>連續天數</div>
+                        <div>連續冒險天數</div>
                     </div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-icon check"><i class="fas fa-circle-check"></i></div>
+                    <div class="stat-icon check"><i class="fas fa-star"></i></div>
                     <div class="stat-details">
                         <div id="completedCountDisplay">0</div>
-                        <div>已完成任務</div>
+                        <div>已收服閃念</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 輸入框區塊 -->
         <div class="input-card">
             <div class="input-row">
-                <input type="text" id="taskInput" placeholder="浮現一個念頭...">
-                <button class="add-btn" id="addTaskBtn"><i class="fas fa-plus"></i></button>
+                <input type="text" id="taskInput" placeholder="捕捉到一個閃念精靈...">
+                <button class="add-btn" id="addTaskBtn"><i class="fas fa-feather-pointed"></i></button>
             </div>
-            <div class="tag-selector" id="tagSelector">
-                <button class="tag-btn active" data-tag="待辦任務"><i class="fas fa-sword"></i> 待辦任務</button>
-                <button class="tag-btn" data-tag="購物清單"><i class="fas fa-shopping-bag"></i> 購物清單</button>
-                <button class="tag-btn" data-tag="想讀的書"><i class="fas fa-book-open"></i> 想讀的書</button>
+            
+            <div class="section-label">選擇冒險分類：</div>
+            <div class="tag-selector" id="tagSelector"></div>
+
+            <div class="section-label">重複召喚頻率：</div>
+            <div class="frequency-selector" id="freqSelector">
+                <button class="freq-btn active" data-freq="單次"><i class="fas fa-leaf"></i> 單次</button>
+                <button class="freq-btn" data-freq="每日"><i class="fas fa-sun"></i> 每日</button>
+                <button class="freq-btn" data-freq="每週"><i class="fas fa-calendar-week"></i> 每週</button>
+                <button class="freq-btn" data-freq="每月"><i class="fas fa-moon"></i> 每月</button>
             </div>
         </div>
 
-        <!-- 分類篩選列 -->
-        <div class="filter-row">
-            <button class="filter-btn active" data-filter="全部">✨ 全部 <span id="count-全部">0</span></button>
-            <button class="filter-btn" data-filter="待辦任務">⚔️ 待辦任務 <span id="count-待辦任務">0</span></button>
-            <button class="filter-btn" data-filter="購物清單">🛍️ 購物清單 <span id="count-購物清單">0</span></button>
-            <button class="filter-btn" data-filter="想讀的書">📖 想讀的書 <span id="count-想讀的書">0</span></button>
-        </div>
+        <div class="filter-row" id="filterRow"></div>
 
-        <!-- 任務清單呈現 -->
-        <div class="task-list" id="taskList">
-            <!-- 由 JavaScript 動態渲染 -->
+        <div class="task-list" id="taskList"></div>
+
+        <div class="backup-section">
+            <button class="backup-btn" onclick="exportData()"><i class="fas fa-download"></i> 複製備份代碼</button>
+            <button class="backup-btn" onclick="importData()"><i class="fas fa-upload"></i> 還原備份資料</button>
         </div>
     </div>
 
     <script>
-        // 初始化數據模型
         let state = {
             level: 1,
             xp: 0,
             streak: 0,
             completedCount: 0,
             tasks: [],
+            customTags: ["待辦任務", "購物清單", "想讀的書"],
             lastActiveDate: ""
         };
 
-        // 稱號清單
-        const titles = ["迷途夢想家", "見習冒險者", "任務騎士", "念頭掌控者", "行動傳奇"];
+        const titles = ["迷途夢想家", "見習冒險者", "精靈使者", "閃念掌控者", "行動傳奇"];
         let currentSelectedTag = "待辦任務";
+        let currentSelectedFreq = "單次";
         let currentFilter = "全部";
 
-        // DOM 元素載入
         document.addEventListener("DOMContentLoaded", () => {
             loadFromStorage();
             checkStreak();
+            checkAndResetRepeatingTasks();
             initEventListeners();
+            renderSelectors();
             render();
         });
 
-        // 讀取本地儲存 (修復原本格式錯誤)
         function loadFromStorage() {
             try {
                 const savedState = localStorage.getItem("quest_log_state");
                 if (savedState) {
                     state = JSON.parse(savedState);
-                    // 確保必要欄位存在
                     if (!state.tasks) state.tasks = [];
+                    if (!state.customTags) state.customTags = ["待辦任務", "購物清單", "想讀的書"];
                     if (state.level === undefined) state.level = 1;
                 }
             } catch (e) {
-                console.error("讀取儲存失敗，正在初始化全新狀態", e);
+                console.error("載入失敗", e);
             }
         }
 
-        // 儲存資料
         function saveToStorage() {
             localStorage.setItem("quest_log_state", JSON.stringify(state));
         }
 
-        // 檢查連續天數邏輯
+        function renderSelectors() {
+            const tagSelector = document.getElementById("tagSelector");
+            tagSelector.innerHTML = "";
+            state.customTags.forEach(tag => {
+                const isActive = tag === currentSelectedTag ? "active" : "";
+                tagSelector.innerHTML += `<button class="tag-btn ${isActive}" data-tag="${tag}"><i class="fas fa-paw"></i> ${tag}</button>`;
+            });
+            tagSelector.innerHTML += `<button class="tag-btn add-custom-tag-btn" id="addCustomTagBtn"><i class="fas fa-plus"></i> 新增分類</button>`;
+
+            const filterRow = document.getElementById("filterRow");
+            filterRow.innerHTML = `<button class="filter-btn ${currentFilter === '全部' ? 'active' : ''}" data-filter="全部">✨ 全部 <span id="count-全部">0</span></button>`;
+            state.customTags.forEach(tag => {
+                const isActive = tag === currentFilter ? "active" : "";
+                filterRow.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${tag}">🧚 ${tag} <span id="count-${tag}">0</span></button>`;
+            });
+
+            rebindSelectorEvents();
+        }
+
+        function rebindSelectorEvents() {
+            document.querySelectorAll("#tagSelector .tag-btn:not(.add-custom-tag-btn)").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    document.querySelectorAll("#tagSelector .tag-btn").forEach(b => b.classList.remove("active"));
+                    e.currentTarget.classList.add("active");
+                    currentSelectedTag = e.currentTarget.getAttribute("data-tag");
+                });
+            });
+
+            document.getElementById("addCustomTagBtn").addEventListener("click", () => {
+                const newTagName = prompt("請輸入新魔法分類名稱：");
+                if (newTagName && newTagName.trim() !== "") {
+                    const clean = newTagName.trim();
+                    if (!state.customTags.includes(clean)) {
+                        state.customTags.push(clean);
+                        currentSelectedTag = clean;
+                        saveToStorage();
+                        renderSelectors();
+                        render();
+                    }
+                }
+            });
+
+            document.querySelectorAll("#filterRow .filter-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    document.querySelectorAll("#filterRow .filter-btn").forEach(b => b.classList.remove("active"));
+                    e.currentTarget.classList.add("active");
+                    currentFilter = e.currentTarget.getAttribute("data-filter");
+                    render();
+                });
+            });
+        }
+
         function checkStreak() {
             const today = new Date().toLocaleDateString();
-            if (state.lastActiveDate) {
+            if (state.lastActiveDate && state.lastActiveDate !== today) {
                 const lastDate = new Date(state.lastActiveDate);
                 const todayDate = new Date(today);
-                const diffTime = Math.abs(todayDate - lastDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                if (diffDays === 1) {
-                    state.streak += 1;
-                } else if (diffDays > 1) {
-                    state.streak = 1; // 中斷後重置
-                }
-            } else {
-                state.streak = 1; // 第一次使用
+                const diffDays = Math.ceil(Math.abs(todayDate - lastDate) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) state.streak += 1;
+                else if (diffDays > 1) state.streak = 1;
+            } else if (!state.lastActiveDate) {
+                state.streak = 1;
             }
             state.lastActiveDate = today;
             saveToStorage();
         }
 
-        // 經驗值增加與升級算法
+        function checkAndResetRepeatingTasks() {
+            const todayStr = new Date().toLocaleDateString();
+            const lastResetDate = localStorage.getItem("last_reset_date");
+            if (lastResetDate !== todayStr) {
+                let changed = false;
+                const today = new Date();
+                state.tasks.forEach(t => {
+                    if (t.completed && t.freq !== "單次") {
+                        if (t.freq === "每日" || (t.freq === "每週" && today.getDay() === 1) || (t.freq === "每月" && today.getDate() === 1)) {
+                            t.completed = false;
+                            changed = true;
+                        }
+                    }
+                });
+                localStorage.setItem("last_reset_date", todayStr);
+                if (changed) saveToStorage();
+            }
+        }
+
         function gainXP(amount) {
             state.xp += amount;
             if (state.xp >= 100) {
                 state.xp -= 100;
                 state.level += 1;
-                alert(`🎉 恭喜升級！你已經達到了等級 ${state.level}！`);
+                alert(`✨ 精靈能量爆發！恭喜你達到了 Lv.${state.level}【${titles[Math.min(Math.floor((state.level-1)/3), titles.length-1)]}】！`);
             }
             saveToStorage();
             render();
         }
 
-        // 事件監聽初始化
         function initEventListeners() {
-            // 標籤選擇
-            document.querySelectorAll("#tagSelector .tag-btn").forEach(btn => {
+            document.querySelectorAll("#freqSelector .freq-btn").forEach(btn => {
                 btn.addEventListener("click", (e) => {
-                    document.querySelectorAll("#tagSelector .tag-btn").forEach(b => b.classList.remove("active"));
-                    const target = e.currentTarget;
-                    target.classList.add("active");
-                    currentSelectedTag = target.getAttribute("data-tag");
+                    document.querySelectorAll("#freqSelector .freq-btn").forEach(b => b.classList.remove("active"));
+                    e.currentTarget.classList.add("active");
+                    currentSelectedFreq = e.currentTarget.getAttribute("data-freq");
                 });
             });
 
-            // 分類篩選
-            document.querySelectorAll(".filter-row .filter-btn").forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    document.querySelectorAll(".filter-row .filter-btn").forEach(b => b.classList.remove("active"));
-                    const target = e.currentTarget;
-                    target.classList.add("active");
-                    currentFilter = target.getAttribute("data-filter");
-                    render();
-                });
-            });
-
-            // 新增按鈕與 Enter 鍵
             document.getElementById("addTaskBtn").addEventListener("click", addTask);
             document.getElementById("taskInput").addEventListener("keypress", (e) => {
                 if (e.key === "Enter") addTask();
             });
         }
 
-        // 新增點子任務
         function addTask() {
             const input = document.getElementById("taskInput");
             const text = input.value.trim();
             if (!text) return;
 
-            const newTask = {
+            state.tasks.push({
                 id: Date.now(),
                 text: text,
                 tag: currentSelectedTag,
+                freq: currentSelectedFreq,
                 completed: false
-            };
-
-            state.tasks.push(newTask);
+            });
             input.value = "";
-            
-            // 新增一個念頭獲得 10 點經驗值！
             gainXP(10);
-            render();
         }
 
-        // 切換任務完成狀態
         function toggleTask(id) {
             const task = state.tasks.find(t => t.id === id);
             if (task) {
                 task.completed = !task.completed;
                 if (task.completed) {
                     state.completedCount += 1;
-                    gainXP(25); // 完成一項冒險任務獲得 25 點超多經驗值！
+                    gainXP(25);
                 } else {
                     state.completedCount = Math.max(0, state.completedCount - 1);
                     state.xp = Math.max(0, state.xp - 25);
@@ -598,29 +700,51 @@
             }
         }
 
-        // 刪除任務
         function deleteTask(id) {
             state.tasks = state.tasks.filter(t => t.id !== id);
             saveToStorage();
             render();
         }
 
-        // 計算各分類數量
-        function updateCounters() {
-            const counts = { "全部": state.tasks.length, "待辦任務": 0, "購物清單": 0, "想讀的書": 0 };
-            state.tasks.forEach(t => {
-                if (counts[t.tag] !== undefined) counts[t.tag]++;
+        // 雲端備份魔法替代方案
+        function exportData() {
+            const code = btoa(encodeURIComponent(JSON.stringify(state)));
+            navigator.clipboard.writeText(code).then(() => {
+                alert("🔮 備份成功！精靈代碼已複製到你的剪貼簿。你可以把這段代碼存到 LINE Keep 或記事本，換手機時用它就能一鍵還原囉！");
             });
+        }
 
+        function importData() {
+            const code = prompt("請貼上之前備份的精靈代碼：");
+            if (code) {
+                try {
+                    const decoded = JSON.parse(decodeURIComponent(atob(code.trim())));
+                    if (decoded.level && decoded.tasks) {
+                        state = decoded;
+                        saveToStorage();
+                        renderSelectors();
+                        render();
+                        alert("✨ 魔法還原成功！所有閃念精靈與等級都回來了！");
+                    } else {
+                        alert("代碼格式不正確喔！");
+                    }
+                } catch(e) {
+                    alert("還原失敗，請確保代碼完整。");
+                }
+            }
+        }
+
+        function updateCounters() {
+            const counts = { "全部": state.tasks.length };
+            state.customTags.forEach(tag => counts[tag] = 0);
+            state.tasks.forEach(t => { if (counts[t.tag] !== undefined) counts[t.tag]++; });
             Object.keys(counts).forEach(key => {
                 const el = document.getElementById(`count-${key}`);
                 if (el) el.innerText = counts[key];
             });
         }
 
-        // 畫面完整渲染
         function render() {
-            // 更新看板數據
             document.getElementById("levelDisplay").innerHTML = `${state.level}<span>Lv</span>`;
             const titleIndex = Math.min(Math.floor((state.level - 1) / 3), titles.length - 1);
             document.getElementById("titleDisplay").innerText = titles[titleIndex];
@@ -631,7 +755,6 @@
 
             updateCounters();
 
-            // 渲染任務清單
             const listContainer = document.getElementById("taskList");
             listContainer.innerHTML = "";
 
@@ -640,8 +763,8 @@
             if (filteredTasks.length === 0) {
                 listContainer.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-icon"><i class="feather-icon fas fa-leaf"></i></div>
-                        <p>還沒有任務在這裡。<br>新增一個閃念，開始你的冒險吧！</p>
+                        <div class="empty-icon">🧚</div>
+                        <p>目前沒有閃念精靈停留。<br>新增一個閃念，召喚你的小精靈吧！</p>
                     </div>`;
                 return;
             }
@@ -651,18 +774,17 @@
                 item.className = `task-item ${task.completed ? 'completed' : ''}`;
                 item.innerHTML = `
                     <div class="task-left" onclick="toggleTask(${task.id})">
-                        <div class="checkbox-wrapper">
-                            <div class="custom-checkbox">
-                                <i class="fas fa-check"></i>
-                            </div>
-                        </div>
+                        <div class="custom-checkbox"><i class="fas fa-check"></i></div>
                         <div class="task-content">
                             <span class="task-text">${task.text}</span>
-                            <span class="task-tag">${task.tag}</span>
+                            <div class="task-badges">
+                                <span class="task-tag">${task.tag}</span>
+                                ${task.freq !== '單次' ? `<span class="task-freq"><i class="fas fa-sync"></i> ${task.freq}</span>` : ''}
+                            </div>
                         </div>
                     </div>
                     <button class="delete-btn" onclick="event.stopPropagation(); deleteTask(${task.id})">
-                        <i class="fas fa-trash-can"></i>
+                        <i class="fas fa-trash"></i>
                     </button>
                 `;
                 listContainer.appendChild(item);
