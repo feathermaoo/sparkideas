@@ -2,10 +2,13 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>閃念任務簿 - 點子冒險</title>
+    <!-- 引入 FontAwesome 圖示 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入 Google 日系圓體字型 -->
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <!-- 引入 Chart.js 用於繪製可愛圖表 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -27,16 +30,18 @@
             margin: 0;
             padding: 0;
             font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif;
+            -webkit-tap-highlight-color: transparent; /* 移除手機點擊藍色陰影 */
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 20px;
+            padding: 12px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            min-height: 100vh;
+            height: 100vh; /* 強制鎖定手機螢幕高度 */
+            overflow: hidden; /* 防止整個網頁亂漂、亂滾動 */
             /* 打造溫馨的手作格紋布或針織紋理背景 */
             background-image: linear-gradient(rgba(204, 164, 131, 0.05) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(204, 164, 131, 0.05) 1px, transparent 1px);
@@ -46,20 +51,22 @@
         .container {
             width: 100%;
             max-width: 480px;
+            height: calc(100vh - 24px); /* 剛好符合扣掉上下 padding 的手機高度 */
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 12px;
         }
 
         /* 標題區（拼布手繪字體感） */
         .header {
             text-align: center;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
+            flex-shrink: 0; /* 鎖定不縮水 */
         }
 
         .header h1 {
             color: #b56c4d; /* 溫暖的皮革紅棕色 */
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
             display: flex;
             justify-content: center;
@@ -74,8 +81,8 @@
 
         .header p {
             color: var(--text-muted);
-            font-size: 13px;
-            margin-top: 4px;
+            font-size: 12px;
+            margin-top: 2px;
         }
 
         @keyframes bounce {
@@ -87,31 +94,18 @@
         .stitch-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: 0 6px 16px rgba(166, 146, 130, 0.15);
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(166, 146, 130, 0.12);
             border: 2px dashed var(--stitch-color); /* 虛線縫線 */
             position: relative;
-        }
-
-        /* 裝飾用的小布標 */
-        .stitch-card::after {
-            content: "handmade";
-            position: absolute;
-            top: 12px;
-            right: -8px;
-            background-color: #e88d67;
-            color: white;
-            font-size: 9px;
-            padding: 2px 8px;
-            border-radius: 4px 0 0 4px;
-            box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0; /* 鎖定不縮水 */
         }
 
         .level-info {
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         /* 等級布標 */
@@ -119,21 +113,17 @@
             background-color: var(--accent-yellow);
             border: 2px dashed #ffffff;
             color: #b56c4d;
-            width: 58px;
-            height: 58px;
+            width: 54px;
+            height: 54px;
             border-radius: 50%; /* 圓形鈕扣感 */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
             box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
-        }
-
-        .level-badge span {
-            font-size: 9px;
-            font-weight: normal;
+            flex-shrink: 0;
         }
 
         .level-progress-container {
@@ -148,7 +138,7 @@
         }
 
         .current-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             color: #b56c4d;
         }
@@ -182,19 +172,19 @@
         .stat-box {
             background-color: #fffdfa;
             border-radius: 14px;
-            padding: 10px 12px;
+            padding: 8px 12px;
             display: flex;
             align-items: center;
             gap: 10px;
             border: 1px solid #ebdccb;
         }
 
-        .stat-icon { font-size: 18px; }
+        .stat-icon { font-size: 16px; }
         .stat-icon.fire { color: var(--accent-pink); }
         .stat-icon.check { color: var(--accent-green); }
 
         .stat-details div:first-child {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
         }
 
@@ -207,17 +197,18 @@
         .input-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 18px;
-            box-shadow: 0 6px 16px rgba(166, 146, 130, 0.15);
+            padding: 14px;
+            box-shadow: 0 4px 12px rgba(166, 146, 130, 0.12);
             border: 2px dashed var(--stitch-color);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            flex-shrink: 0; /* 鎖定不縮水 */
         }
 
         .input-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
         }
 
@@ -226,7 +217,7 @@
             background-color: #faf6f0;
             border: 2px solid #ebdccb;
             border-radius: 14px;
-            padding: 12px 16px;
+            padding: 10px 14px;
             color: var(--text-main);
             font-size: 14px;
             outline: none;
@@ -243,7 +234,7 @@
             background-color: #e88d67;
             border: 2px solid #ffffff;
             width: 75px;
-            height: 46px;
+            height: 42px;
             border-radius: 14px;
             color: white;
             font-size: 13px;
@@ -256,6 +247,7 @@
             gap: 5px;
             box-shadow: 0 4px 8px rgba(166, 146, 130, 0.2);
             transition: transform 0.1s;
+            flex-shrink: 0;
         }
 
         .add-btn:active { transform: scale(0.95); }
@@ -265,6 +257,7 @@
             gap: 8px;
             overflow-x: auto;
             padding-bottom: 4px;
+            flex-shrink: 0;
         }
 
         .tag-selector::-webkit-scrollbar, .frequency-selector::-webkit-scrollbar, .filter-row::-webkit-scrollbar {
@@ -272,9 +265,9 @@
         }
 
         .section-label {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
-            margin-top: 2px;
+            margin-top: 1px;
             margin-bottom: -4px;
             font-weight: bold;
         }
@@ -284,7 +277,7 @@
             background-color: #faf6f0;
             border: 1px dashed var(--stitch-color);
             color: var(--text-main);
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 12px;
             cursor: pointer;
@@ -316,10 +309,13 @@
         }
 
         /* 下方篩選列布貼 */
+        .filter-row {
+            flex-shrink: 0; /* 鎖定不縮水 */
+        }
         .filter-btn {
             background-color: var(--card-bg);
             border: 1px dashed #ebdccb;
-            box-shadow: 0 4px 8px rgba(166, 146, 130, 0.08);
+            box-shadow: 0 4px 8px rgba(166, 146, 130, 0.06);
         }
 
         .filter-btn.active {
@@ -329,11 +325,23 @@
             color: white;
         }
 
-        /* 任務列表 */
+        /* 👑 核心滑動區：任務列表 */
         .task-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            flex-grow: 1; /* 吃掉手機剩下的所有空間 */
+            overflow-y: auto; /* 超出時，只有這裡可以上下滑動 */
+            padding-right: 2px;
+        }
+
+        /* 隱藏原生滑動捲軸但保有功能 */
+        .task-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .task-list::-webkit-scrollbar-thumb {
+            background-color: rgba(204, 164, 131, 0.3);
+            border-radius: 4px;
         }
 
         .empty-state {
@@ -358,19 +366,20 @@
         .task-item {
             background-color: var(--card-bg);
             border-radius: 16px;
-            padding: 12px 16px;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            box-shadow: 0 4px 10px rgba(166, 146, 130, 0.1);
+            box-shadow: 0 2px 8px rgba(166, 146, 130, 0.08);
             border: 1px solid #f3ece4;
             border-left: 5px solid var(--accent-pink); /* 左側滾邊 */
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.2s ease;
+            flex-shrink: 0;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -395,6 +404,7 @@
             font-size: 11px;
             transition: all 0.2s;
             background-color: #ffffff;
+            flex-shrink: 0;
         }
 
         .task-item.completed .custom-checkbox {
@@ -412,6 +422,7 @@
         .task-text {
             font-size: 14px;
             font-weight: 500;
+            word-break: break-all;
         }
 
         .task-item.completed .task-text {
@@ -447,8 +458,9 @@
             color: #ebdccb;
             cursor: pointer;
             font-size: 14px;
-            padding: 4px;
+            padding: 6px;
             transition: color 0.2s;
+            flex-shrink: 0;
         }
 
         .delete-btn:hover { color: var(--accent-pink); }
@@ -467,20 +479,21 @@
             align-items: center;
             border: 1px dashed var(--stitch-color);
             transition: all 0.2s;
-            margin-top: 5px;
+            flex-shrink: 0; /* 鎖定不縮水 */
+            margin-top: 2px;
         }
-        .chart-toggle-header:hover { background-color: #e2d2c1; }
 
         .chart-container-wrapper {
             display: none; /* 預設收起不顯示 */
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 16px;
-            box-shadow: 0 6px 16px rgba(166, 146, 130, 0.15);
+            padding: 14px;
+            box-shadow: 0 4px 12px rgba(166, 146, 130, 0.12);
             border: 2px dashed var(--stitch-color);
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             animation: slideDown 0.3s ease-out;
+            flex-shrink: 0;
         }
 
         @keyframes slideDown {
@@ -500,7 +513,7 @@
         }
 
         .range-btn {
-            padding: 4px 10px;
+            padding: 3px 10px;
             font-size: 11px;
             border-radius: 12px;
         }
@@ -517,7 +530,8 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 10px;
+            padding-top: 2px;
+            flex-shrink: 0;
         }
 
         .backup-btn {
@@ -574,7 +588,7 @@
 
         <div class="input-card">
             <div class="input-row">
-                <input type="text" id="taskInput" placeholder="捕捉到一個超讚念頭...">
+                <input type="text" id="taskInput" placeholder="捕捉到一個手寫念頭...">
                 <button class="add-btn" id="addTaskBtn"><i class="fas fa-pencil-alt"></i>新增</button>
             </div>
             
@@ -592,13 +606,16 @@
 
         <div class="filter-row" id="filterRow"></div>
 
+        <!-- 可滑動任務清單 -->
         <div class="task-list" id="taskList"></div>
 
+        <!-- 歷程檢視抽屜按鈕 -->
         <div class="chart-toggle-header" id="chartToggleBtn">
-            <span><i class="fas fa-chart-line"></i> 📊 點擊拉開：查看冒險歷程圖表</span>
+            <span><i class="fas fa-chart-line"></i> 📊 查看冒險歷程圖表</span>
             <i class="fas fa-chevron-down" id="arrowIcon"></i>
         </div>
 
+        <!-- 隱藏的圖表抽屜內容 -->
         <div class="chart-container-wrapper" id="chartWrapper">
             <div class="chart-controls">
                 <span style="font-size: 12px; font-weight: bold; color: #b56c4d;">🧶 縫製能量歷史紀錄</span>
@@ -607,7 +624,7 @@
                     <button class="range-btn" data-range="30">30D</button>
                 </div>
             </div>
-            <canvas id="historyChart" style="max-height: 150px; width: 100%;"></canvas>
+            <canvas id="historyChart" style="max-height: 120px; width: 100%;"></canvas>
         </div>
 
         <div class="backup-section">
@@ -625,17 +642,16 @@
             tasks: [],
             customTags: ["待辦任務", "購物清單", "想讀的書"],
             lastActiveDate: "",
-            historyData: {} // 記錄每日完成任務數 {"2026/6/26": 3}
+            historyData: {} 
         };
 
         const titles = ["迷途夢想家", "見習冒險者", "精靈使者", "閃念掌控者", "行動傳奇"];
         let currentSelectedTag = "待辦任務";
         let currentSelectedFreq = "單次";
         let currentFilter = "全部";
-        let currentRange = 7; // 預設為 7 天
+        let currentRange = 7; 
         let myChart = null;
 
-        // 定義分類名稱對應的可愛手作圖示表
         const tagIcons = {
             "待辦任務": "fa-clipboard-list",
             "購物清單": "fa-shopping-bag",
@@ -747,7 +763,6 @@
             const lastResetDate = localStorage.getItem("last_reset_date");
             if (lastResetDate !== todayStr) {
                 let changed = false;
-                const Skinner = new Date();
                 const today = new Date();
                 state.tasks.forEach(t => {
                     if (t.completed && t.freq !== "單次") {
@@ -767,7 +782,7 @@
             if (state.xp >= 100) {
                 state.xp -= 100;
                 state.level += 1;
-                alert(`🔮 成長大升級！恭喜你達到了 Lv.${state.level}【${titles[Math.min(Math.floor((state.level-1)/3), titles.length-1)]}】！`);
+                alert(`🔮 成長大升級！恭喜你達到了 Lv.${state.level}！`);
             }
             saveToStorage();
             render();
@@ -800,9 +815,9 @@
                     wrapper.style.display = "flex";
                     arrow.className = "fas fa-chevron-up";
                     if (!myChart) {
-                        initChart(); // 展開時才第一次載入圖表
+                        initChart(); 
                     } else {
-                        updateChart(); // 已載入過就更新數據
+                        updateChart(); 
                     }
                 }
             });
@@ -843,19 +858,17 @@
                 if (task.completed) {
                     state.completedCount += 1;
                     gainXP(10);
-                    // 圖表歷程數據增加
                     state.historyData[todayStr] = (state.historyData[todayStr] || 0) + 1;
                 } else {
                     state.completedCount = Math.max(0, state.completedCount - 1);
                     gainXP(-10);
-                    // 圖表歷程數據扣除
                     if (state.historyData[todayStr]) {
                         state.historyData[todayStr] = Math.max(0, state.historyData[todayStr] - 1);
                     }
                 }
                 saveToStorage();
                 render();
-                updateChart(); // 更新圖表視覺
+                updateChart(); 
             }
         }
 
@@ -865,7 +878,6 @@
             render();
         }
 
-        // 動態生成圖表天數
         function initChart() {
             const ctx = document.getElementById('historyChart').getContext('2d');
             const labels = [];
@@ -891,20 +903,21 @@
                         borderWidth: 3,
                         tension: 0.3,
                         pointBackgroundColor: '#b56c4d',
-                        pointRadius: currentRange === 30 ? 2 : 4
+                        pointRadius: currentRange === 30 ? 1 : 3
                     }]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { stepSize: 1, color: '#a69282' },
-                            grid: { color: 'rgba(204, 164, 131, 0.1)' }
+                            ticks: { stepSize: 1, color: '#a69282', font: { size: 10 } },
+                            grid: { color: 'rgba(204, 164, 131, 0.08)' }
                         },
                         x: {
-                            ticks: { color: '#a69282', maxRotation: 45 },
+                            ticks: { color: '#a69282', maxRotation: 45, font: { size: 10 } },
                             grid: { display: false }
                         }
                     }
@@ -927,7 +940,7 @@
             
             myChart.data.labels = labels;
             myChart.data.datasets[0].data = chartData;
-            myChart.data.datasets[0].pointRadius = currentRange === 30 ? 2 : 4;
+            myChart.data.datasets[0].pointRadius = currentRange === 30 ? 1 : 3;
             myChart.update();
         }
 
@@ -970,7 +983,6 @@
         }
 
         function render() {
-            // 保留羽毛精心微調的徽章細分等級
             let lvlIcon = "🛡️"; 
             if (state.level > 3 && state.level <= 5) lvlIcon = "🪃";  
             if (state.level > 5 && state.level <= 7) lvlIcon = "🗡️"; 
@@ -990,6 +1002,7 @@
             updateCounters();
 
             const listContainer = document.getElementById("taskList");
+            const currentScroll = listContainer.scrollTop; // 記錄捲軸位置防止抖動
             listContainer.innerHTML = "";
 
             const filteredTasks = state.tasks.filter(t => currentFilter === "全部" || t.tag === currentFilter);
@@ -1030,6 +1043,7 @@
                 `;
                 listContainer.appendChild(item);
             });
+            listContainer.scrollTop = currentScroll;
         }
     </script>
 </body>
