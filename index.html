@@ -885,9 +885,12 @@
 
         function render() {
             let lvlIcon = "🛡️"; 
-            if (state.level > 3 && state.level <= 6) lvlIcon = "⚔️";  
-            if (state.level > 6 && state.level <= 10) lvlIcon = "🪄"; 
+            if (state.level > 3 && state.level <= 5) lvlIcon = "🪃";  
+            if (state.level > 5 && state.level <= 7) lvlIcon = "🗡️"; 
+            if (state.level > 7 && state.level <= 9) lvlIcon = "⚔️"; 
+            if (state.level > 9 && state.level <= 10) lvlIcon = "🪄"; 
             if (state.level > 10) lvlIcon = "👑"; 
+            
 
             document.getElementById("levelDisplay").innerHTML = `${state.level}<span style="font-size:11px; font-weight:normal; margin-top:2px;">${lvlIcon}</span>`;
             
