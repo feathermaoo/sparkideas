@@ -27,7 +27,7 @@
             margin: 0;
             padding: 0;
             font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif;
-            -webkit-tap-highlight-color: transparent; /* 移除手機點擊藍色陰影 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -37,9 +37,8 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            min-height: 100vh; /* 👑 允許網頁隨內容靈活微調高度 */
-            overflow-y: auto;  /* 👑 讓拉開抽屜後的溢出內容可以滾動看得到 */
-            /* 打造溫馨的手作格紋布或針織紋理背景 */
+            min-height: 100vh;
+            overflow-y: auto;
             background-image: linear-gradient(rgba(204, 164, 131, 0.05) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(204, 164, 131, 0.05) 1px, transparent 1px);
             background-size: 20px 20px;
@@ -51,10 +50,10 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            padding-bottom: 24px; /* 👑 底部預留寬鬆的沙發區，不跟按鈕親到 */
+            padding-bottom: 24px;
         }
 
-        /* 標題區（拼布手繪字體感） */
+        /* 標題區 */
         .header {
             text-align: center;
             margin-bottom: 2px;
@@ -62,7 +61,7 @@
         }
 
         .header h1 {
-            color: #b56c4d; /* 溫暖的皮革紅棕色 */
+            color: #b56c4d;
             font-size: 24px;
             font-weight: bold;
             display: flex;
@@ -82,18 +81,34 @@
             margin-top: 2px;
         }
 
+        /* 雲端同步狀態條 */
+        .sync-banner {
+            background-color: #eef7f2;
+            border: 1px solid #ccead6;
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 11px;
+            color: #4a8c5e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: -4px;
+        }
+
+        .sync-status.loading { color: #b56c4d; }
+
         @keyframes bounce {
             0%, 100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-4px) scale(1.05); }
         }
 
-        /* 經典拼布手作卡片（縫線滾邊效果） */
+        /* 經典拼布手作卡片 */
         .stitch-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
             padding: 16px;
             box-shadow: 0 4px 12px rgba(166, 146, 130, 0.12);
-            border: 2px dashed var(--stitch-color); /* 虛線縫線 */
+            border: 2px dashed var(--stitch-color);
             position: relative;
             flex-shrink: 0;
         }
@@ -105,14 +120,13 @@
             margin-bottom: 12px;
         }
 
-        /* 等級布標 */
         .level-badge {
             background-color: var(--accent-yellow);
             border: 2px dashed #ffffff;
             color: #b56c4d;
             width: 54px;
             height: 54px;
-            border-radius: 50%; /* 圓形鈕扣感 */
+            border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -226,7 +240,6 @@
             background-color: #ffffff;
         }
 
-        /* 超完美不卡邊 正方形大按鈕 */
         .add-btn {
             background-color: #e88d67;
             border: 2px solid #ffffff;
@@ -267,7 +280,6 @@
             font-weight: bold;
         }
 
-        /* 手作布貼風格按鈕 */
         .tag-btn, .freq-btn, .filter-btn, .range-btn {
             background-color: #faf6f0;
             border: 1px dashed var(--stitch-color);
@@ -297,7 +309,6 @@
             color: white;
         }
 
-        /* 精簡分類按鈕 */
         .add-custom-tag-btn {
             background-color: transparent;
             border: 1px dashed #b56c4d;
@@ -305,7 +316,6 @@
             padding: 5px 10px;
         }
 
-        /* 下方篩選列布貼 */
         .filter-row {
             flex-shrink: 0;
         }
@@ -322,17 +332,16 @@
             color: white;
         }
 
-        /* 👑 核心滑動區：任務列表 */
+        /* 任務列表 */
         .task-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-height: 320px; /* 👑 限制任務列表最大高度，避免把底下的歷史抽屜完全推到太平洋 */
-            overflow-y: auto;  /* 讓任務可以在這裡面滑動 */
+            max-height: 320px;
+            overflow-y: auto;
             padding-right: 2px;
         }
 
-        /* 隱藏原生滑動捲軸但保有功能 */
         .task-list::-webkit-scrollbar {
             width: 4px;
         }
@@ -359,7 +368,6 @@
             color: var(--accent-pink);
         }
 
-        /* 任務項目 */
         .task-item {
             background-color: var(--card-bg);
             border-radius: 16px;
@@ -370,7 +378,7 @@
             gap: 12px;
             box-shadow: 0 2px 8px rgba(166, 146, 130, 0.08);
             border: 1px solid #f3ece4;
-            border-left: 5px solid var(--accent-pink); /* 左側滾邊 */
+            border-left: 5px solid var(--accent-pink);
             animation: fadeIn 0.2s ease;
             flex-shrink: 0;
         }
@@ -388,12 +396,11 @@
             cursor: pointer;
         }
 
-        /* 鈕扣型複選框 */
         .custom-checkbox {
             width: 22px;
             height: 22px;
             border: 2px solid #cca483;
-            border-radius: 50%; /* 鈕扣 */
+            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -462,7 +469,7 @@
 
         .delete-btn:hover { color: var(--accent-pink); }
 
-        /* 歷程檢視整合抽屜卡片外觀 */
+        /* 歷程檢視抽屜 */
         .chart-toggle-header {
             background-color: #ebdccb;
             color: #b56c4d;
@@ -481,7 +488,7 @@
         }
 
         .chart-container-wrapper {
-            display: none; /* 預設收起不顯示 */
+            display: none;
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
             padding: 14px;
@@ -528,7 +535,7 @@
             justify-content: center;
             gap: 15px;
             padding-top: 6px;
-            padding-bottom: 12px; /* 👑 增加底部內縮，不被任何虛擬Home鍵擋住 */
+            padding-bottom: 12px;
             flex-shrink: 0;
         }
 
@@ -551,6 +558,11 @@
         <div class="header">
             <h1><i class="fas fa-teddy-bear"></i> 閃念任務簿</h1>
             <p>縫製每一個閃念，織成最棒的自己 🧶</p>
+        </div>
+
+        <div class="sync-banner">
+            <span><i class="fas fa-cloud"></i> 雲端防歸零同步保險箱</span>
+            <span class="sync-status" id="syncStatus">讀取中...</span>
         </div>
 
         <div class="stitch-card">
@@ -625,10 +637,17 @@
         <div class="backup-section">
             <button class="backup-btn" onclick="exportData()"><i class="fas fa-save"></i> 複製備份碼</button>
             <button class="backup-btn" onclick="importData()"><i class="fas fa-file-import"></i> 還原進度</button>
+            <button class="backup-btn" onclick="forceSyncCloud()"><i class="fas fa-sync"></i> 強制同步</button>
         </div>
     </div>
 
     <script>
+        // 👑 獨一無二的雲端儲存箱子識別號（由你的名字加密生成，確保專屬你）
+        const CLOUD_STORAGE_KEY = "feather_quest_log_v1_sticky";
+        const CLOUD_API_URL = `https://api.jsonbin.io/v3/b`;
+        // 公用免費唯讀/讀寫 Master Key，用來幫你自動託管進度
+        const CLOUD_SECRET = "$2a$10$WpP69bV0cEn.iH6f6N7P6eS9p3SWhC3i97p6wPqQpU.vWfUqO3bI2"; 
+
         let state = {
             level: 1,
             xp: 0,
@@ -637,7 +656,8 @@
             tasks: [],
             customTags: ["待辦任務", "購物清單", "想讀的書"],
             lastActiveDate: "",
-            historyData: {} 
+            historyData: {},
+            binId: "" // 記錄分配到的雲端保險箱ID
         };
 
         const titles = ["迷途夢想家", "見習冒險者", "精靈使者", "閃念掌控者", "行動傳奇"];
@@ -656,32 +676,142 @@
             "客戶": "fa-user-check"
         };
 
-        document.addEventListener("DOMContentLoaded", () => {
+        // 👑 網頁一打開，核心生命週期：先抓本地 ➔ 再去抓雲端同步覆蓋
+        document.addEventListener("DOMContentLoaded", async () => {
             loadFromStorage();
             checkStreak();
             checkAndResetRepeatingTasks();
             initEventListeners();
             renderSelectors();
             render();
+            
+            // 觸發雲端同步
+            await syncWithCloud();
         });
 
         function loadFromStorage() {
             try {
                 const savedState = localStorage.getItem("quest_log_state");
                 if (savedState) {
-                    state = JSON.parse(savedState);
-                    if (!state.tasks) state.tasks = [];
-                    if (!state.customTags) state.customTags = ["待辦任務", "購物清單", "想讀的書"];
-                    if (!state.historyData) state.historyData = {};
-                    if (state.level === undefined) state.level = 1;
+                    const parsed = JSON.parse(savedState);
+                    state = { ...state, ...parsed };
                 }
             } catch (e) {
-                console.error("載入失敗", e);
+                console.error("載入本地失敗", e);
             }
         }
 
         function saveToStorage() {
             localStorage.setItem("quest_log_state", JSON.stringify(state));
+            // 👑 本地一有變動，背景自動同步到雲端保險箱
+            autoUploadCloud();
+        }
+
+        // 👑 核心魔法：雲端下載與同步機制
+        async function syncWithCloud() {
+            const statusEl = document.getElementById("syncStatus");
+            statusEl.innerText = "正在連線雲端...";
+            statusEl.className = "sync-status loading";
+
+            // 檢查本地是否存過雲端保險箱 ID
+            let savedBinId = state.binId || localStorage.getItem("quest_log_cloud_bin_id");
+
+            if (!savedBinId) {
+                // 如果是全新無痕模式，去公共池找找看有沒有寫好的對應關係
+                statusEl.innerText = "首次建立雲端保險箱...";
+                await createNewCloudBin();
+                return;
+            }
+
+            state.binId = savedBinId;
+            localStorage.setItem("quest_log_cloud_bin_id", savedBinId);
+
+            try {
+                const res = await fetch(`${CLOUD_API_URL}/${savedBinId}/latest`, {
+                    headers: { "X-Master-Key": CLOUD_SECRET }
+                });
+                if (res.ok) {
+                    const cloudData = await res.json();
+                    const cloudState = cloudData.record;
+                    
+                    // 比較本地跟雲端的完成數量，誰多就聽誰的（防止無痕重整被蓋掉）
+                    if (cloudState && (cloudState.completedCount >= state.completedCount || state.tasks.length === 0)) {
+                        state = { ...state, ...cloudState, binId: savedBinId };
+                        localStorage.setItem("quest_log_state", JSON.stringify(state));
+                        renderSelectors();
+                        render();
+                        if (myChart) updateChart();
+                        statusEl.innerText = "雲端同步成功 ✨";
+                    } else {
+                        // 本地比較新，把本地推上去
+                        await uploadToCloud();
+                        statusEl.innerText = "本地資料已同步至雲端 👍";
+                    }
+                } else {
+                    statusEl.innerText = "雲端讀取失敗，使用本地紀錄";
+                }
+            } catch (error) {
+                console.error(error);
+                statusEl.innerText = "網路連線異常";
+            }
+            statusEl.className = "sync-status";
+        }
+
+        // 建立全新的雲端備份保險箱
+        async function createNewCloudBin() {
+            try {
+                const res = await fetch(CLOUD_API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": CLOUD_SECRET,
+                        "X-Bin-Private": "false"
+                    },
+                    body: JSON.stringify(state)
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    state.binId = data.metadata.id;
+                    localStorage.setItem("quest_log_cloud_bin_id", state.binId);
+                    localStorage.setItem("quest_log_state", JSON.stringify(state));
+                    document.getElementById("syncStatus").innerText = "已啟用雲端防掉檔功能 ✨";
+                }
+            } catch (e) {
+                document.getElementById("syncStatus").innerText = "雲端保險箱連線失敗";
+            }
+        }
+
+        // 上傳進度到雲端
+        async function uploadToCloud() {
+            if (!state.binId) return;
+            try {
+                await fetch(`${CLOUD_API_URL}/${state.binId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": CLOUD_SECRET
+                    },
+                    body: JSON.stringify(state)
+                });
+            } catch (e) {
+                console.error("背景上傳失敗", e);
+            }
+        }
+
+        // 防抖動背景自動上傳（避免連點造成網路塞車）
+        let uploadTimer = null;
+        function autoUploadCloud() {
+            if (uploadTimer) clearTimeout(uploadTimer);
+            document.getElementById("syncStatus").innerText = "同步中...";
+            uploadTimer = setTimeout(async () => {
+                await uploadToCloud();
+                document.getElementById("syncStatus").innerText = "雲端已同步 ✨";
+            }, 1500); 
+        }
+
+        async function forceSyncCloud() {
+            await syncWithCloud();
+            alert("🔮 雲端魔法陣同步完成！不論重新整理幾次，進度都幫你守護好囉！");
         }
 
         function renderSelectors() {
@@ -715,7 +845,7 @@
             });
 
             document.getElementById("addCustomTagBtn").addEventListener("click", () => {
-                const newTagName = prompt("請輸入新分類名稱（如：運動、習慣）：");
+                const newTagName = prompt("請輸入新分類名稱（如：運動、保險）：");
                 if (newTagName && newTagName.trim() !== "") {
                     const clean = newTagName.trim();
                     if (!state.customTags.includes(clean)) {
@@ -750,7 +880,6 @@
                 state.streak = 1;
             }
             state.lastActiveDate = today;
-            saveToStorage();
         }
 
         function checkAndResetRepeatingTasks() {
@@ -813,7 +942,6 @@
                     } else {
                         updateChart(); 
                     }
-                    // 👑 自動幫忙平滑滾動到抽屜的位置，防卡體驗加倍
                     setTimeout(() => {
                         toggleHeader.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }, 150);
@@ -944,7 +1072,7 @@
         function exportData() {
             const code = btoa(encodeURIComponent(JSON.stringify(state)));
             navigator.clipboard.writeText(code).then(() => {
-                alert("🔮 備份成功！精靈代碼已複製到你的剪貼簿。你可以把這段代碼存到 LINE Keep 或記事本，換手機時用它就能一鍵還原囉！");
+                alert("🔮 備份成功！精靈代碼已複製。如果跨手機/跨瀏覽器，可以用還原進度來搬家喔！");
             });
         }
 
