@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>閃念點子冒險實驗錄</title>
+    <title>閃念點子冒險實錄</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,13 +24,16 @@
             --border-radius: 20px;
         }
 
-        /* 👑 雙重保險 1：強制所有網頁標籤，甚至包含動態生成的內容都必須使用可愛圓體 */
-        *, *::before, *::after {
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif !important;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 👑 核心修正：將字型萬能鎖綁在 body 與特定文字類別，讓 FontAwesome 的 .fas, .fab 圖示字型不被蓋掉，徹底根治方塊豆腐塊！ */
+        body, input, button, span, p, h1, div:not(.fas):not(.fab) {
+            font-family: "Zen Maru Gothic", "Chalkboard SE", "Microsoft JhengHei", sans-serif !important;
         }
 
         body {
@@ -137,7 +140,7 @@
             margin-bottom: 12px;
         }
 
-        /* 👑 鈕扣比例回復到好看的 70px 外觀 */
+        /* 鈕扣外圈比例 */
         .level-badge {
             background-color: var(--accent-yellow);
             border: 2px dashed #ffffff;
@@ -155,7 +158,7 @@
             padding-top: 2px;
         }
 
-        /* 👑 雙重保險 2：確保動態產生的 LV.字樣也是圓體，大小剛好不擠壓 */
+        /* LV.數字文字樣式 */
         .lvl-text-num {
             font-size: 13px;
             font-weight: 700;
@@ -163,11 +166,13 @@
             color: #b56c4d;
         }
 
-        /* 👑 完美放大 2.5 倍的盾牌與冒險裝備圖示（26px） */
+        /* 完美大比例的裝備圖示（26px），強制排除圓體字型干擾 */
         .lvl-icon-large {
             font-size: 26px !important; 
             margin-top: 1px;
             display: inline-block;
+            font-family: 'Font Awesome 6 Free' !important;
+            font-weight: 900;
         }
 
         .level-progress-container {
@@ -720,12 +725,12 @@
         function editTask(id) {
             const task = state.tasks.find(t => t.id === id);
             if (!task) return;
-            const newText = prompt("✏️ 修改你的念頭：", task.text);
+            const newText = prompt("✏️ 修改你的手寫念頭：", task.text);
             if (newText && newText.trim() !== "") { task.text = newText.trim(); saveToStorage(); render(); }
         }
 
         function deleteTask(id) {
-            const taskToDelete = state.tasks.find(t => t.id !== id);
+            const taskToDelete = state.tasks.find(t => t.id === id);
             if (!taskToDelete) return;
             if (taskToDelete.completed) {
                 gainXP(-12);
@@ -799,7 +804,6 @@
             if (state.level > 7 && state.level <= 9) lvlIcon = "⚔️"; if (state.level > 9 && state.level <= 10) lvlIcon = "🪄"; 
             if (state.level > 10) lvlIcon = "👑"; 
 
-            // 👑 修正核心：文字和圖示內嵌排版，外加 CSS 萬能鎖強制鎖定圓體
             document.getElementById("levelDisplay").innerHTML = `
                 <div class="lvl-text-num">LV. ${state.level}</div>
                 <div class="lvl-icon-large">${lvlIcon}</div>
