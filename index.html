@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>閃念點子冒險實驗錄</title>
+    <!-- 引入 FontAwesome 圖示 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <!-- 引入 Google 日系圓體字型 -->
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght=500;700&display=swap" rel="stylesheet">
+    <!-- 引入 Chart.js 用於繪製可愛圖表 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -87,7 +90,7 @@
             50% { transform: translateY(-4px) scale(1.05); }
         }
 
-        /* 👑 Google 登入狀態橫條 */
+        /* Google 登入狀態橫條 */
         .g-sync-banner {
             background-color: #f8f4ee;
             border: 1px dashed var(--stitch-color);
@@ -255,7 +258,7 @@
             background-color: #ffffff;
         }
 
-        /* 完美的正方形不卡邊按鈕 */
+        /* 正方形加號按鈕 */
         .add-btn {
             background-color: #e88d67;
             border: 2px solid #ffffff;
@@ -434,6 +437,18 @@
         .chart-controls { display: flex; justify-content: space-between; align-items: center; }
         .range-selector-row { display: flex; gap: 6px; }
         .range-btn { padding: 3px 10px; font-size: 11px; border-radius: 12px; }
+
+        /* 專屬簽名布標設計 */
+        .feather-footer {
+            text-align: center;
+            padding: 12px 0 6px 0;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            font-weight: bold;
+            border-top: 1px dashed #ebdccb;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -444,6 +459,7 @@
             <p>縫製每一個閃念，織成最棒的自己 🧶</p>
         </div>
 
+        <!-- Google 自動雲端同步條 -->
         <div class="g-sync-banner">
             <span id="syncIconText"><i class="fas fa-key"></i> 進度儲存：在地記憶體</span>
             <button class="g-btn-style" id="gLoginBtn" onclick="handleAuthClick()">
@@ -503,6 +519,7 @@
         <div class="filter-row" id="filterRow"></div>
         <div class="task-list" id="taskList"></div>
 
+        <!-- 歷程檢視 -->
         <div class="chart-toggle-header" id="chartToggleBtn">
             <span><i class="fas fa-chart-line"></i> 📊 查看冒險歷程圖表</span>
             <i class="fas fa-chevron-down" id="arrowIcon"></i>
@@ -519,12 +536,15 @@
             <div class="chart-filter-row" id="chartFilterRow"></div>
             <canvas id="historyChart" style="max-height: 120px; width: 100%;"></canvas>
         </div>
+
+        <!-- 專屬簽名布標 -->
+        <div class="feather-footer">
+            🧶 DESIGN BY FEATHERMAOO
+        </div>
     </div>
 
+    <!-- 載入 Google 官方 API 腳本 -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://apis.google.com/js/api.js" async defer></script>
-
-   <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://apis.google.com/js/api.js" onload="onGapiLoad()" async defer></script>
 
     <script>
@@ -546,7 +566,7 @@
         let myChart = null;
         let tokenClient = null;
         let googleAccessToken = null;
-        let isGapiLoaded = false; // 建立安全鎖
+        let isGapiLoaded = false;
 
         const tagIcons = {
             "待辦任務": "fa-clipboard-list",
@@ -565,21 +585,17 @@
             renderSelectors();
             renderChartSelectors();
             render();
-            // 移除舊有的 setTimeout，改由 onload 觸發
         });
 
-        // 當 Google api.js 下載完成時會自動觸發這裡
         function onGapiLoad() {
             isGapiLoaded = true;
             if (typeof gapi !== 'undefined') {
                 gapi.load('client', () => {
-                    // 安全初始化
                     initGoogleIdentity();
                 });
             }
         }
 
-        // 👑 Google Identity 模組初始化
         function initGoogleIdentity() {
             try {
                 if (typeof google !== 'undefined') {
@@ -599,7 +615,6 @@
         }
 
         function handleAuthClick() {
-            // 安全防護：如果腳本還沒下載完，提示使用者稍等
             if (!isGapiLoaded || !tokenClient) {
                 alert("Google 雲端元件正在載入中，請稍等一秒後再點擊一次喔！🧸");
                 return;
@@ -607,7 +622,6 @@
             tokenClient.requestAccessToken({ prompt: 'consent' });
         }
 
-        // 👑 從個人的 Google Drive 讀取隱藏備份
         async function loadFromGoogleDrive() {
             if (!googleAccessToken) return;
             try {
@@ -635,7 +649,6 @@
             } catch (e) { console.error("雲端讀取錯誤", e); }
         }
 
-        // 👑 將最新資料即時覆蓋到個人的 Google Drive
         async function saveToGoogleDrive() {
             if (!googleAccessToken) return;
             try {
@@ -688,7 +701,6 @@
             } catch (e) { console.error(e); }
         }
 
-        // 👑 有變動時同時儲存本地與 Google 雲端
         function saveToStorage() {
             localStorage.setItem("quest_log_state", JSON.stringify(state));
             saveToGoogleDrive(); 
@@ -897,7 +909,7 @@
                 const todayStr = new Date().toLocaleDateString();
                 if (state.historyData[todayStr]) state.historyData[todayStr] = Math.max(0, state.historyData[todayStr] - 1);
                 if (state.historyDataV2[todayStr] && state.historyDataV2[todayStr][taskToDelete.tag]) {
-                    state.historyDataV2[todayStr][taskToDelete.tag] = Math.max(0, state.historyDataV2[todayStr][taskToDelete.tag] - 1);
+                    state.historyDataV2[todayStr][taskToDelete.tag] = Math.max(0, state.historyData[todayStr][taskToDelete.tag] - 1);
                 }
                 state.completedCount = Math.max(0, state.completedCount - 1);
             } else { gainXP(-2); }
